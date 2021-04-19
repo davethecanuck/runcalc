@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack://src/index.css"],"names":[],"mappings":"AAQA,sCACI,aACJ","file":"main.5de55ef1.chunk.css","sourcesContent":[".calculator {\n    margin-top: 10;\n}\n\n.past-races {\n    margin-top: 10;\n}\n\n.target-races {\n    margin-top: 10;\n}"]}
