@@ -65,14 +65,10 @@ export class PastRaceForm extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     if (this.validateForm(this.state.errors)) {
-      console.info('Valid Form')
+      // Define the race scenario
       let s = new Scenario();
       s.age = this.state.age;
 
-      let race = new Race();
-      race.distance = parseInt(this.state.distance);
-      race.scenario = s;
-      
       // Parse time into [hh,mm,(ss)] array
       let parsedTime = FIELD.time.pattern.exec(this.state.time);
       let timeParts = [];
@@ -83,8 +79,12 @@ export class PastRaceForm extends React.Component {
       if (parsedTime[4] != null) {
         timeParts.push(parseInt(parsedTime[4]));
       }
+
+      // Finally define the race object
+      let race = new Race();
       race.setTimeParts(timeParts);
-      console.log(JSON.stringify(race));
+      race.distance = parseInt(this.state.distance);
+      race.scenario = s;
 
       // Submit to the parent past races list
       this.props.addPastRace(race);

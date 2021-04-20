@@ -23,7 +23,6 @@ export class TargetRaceTable extends React.Component {
 
         if (totalWeight > 0.0) {
           let race = new Race();
-          race.label = distance.label;
           race.distance = distance.value;
 
           // EYE - Converting to int for now. Should render as hh:mm:ss
@@ -58,27 +57,15 @@ export class TargetRaceTable extends React.Component {
 class TargetRaceRow extends React.Component {
   render() {
     let race = this.props.race;
-    let label = race ? race.label : "";
-    let time = race ? race.time : "";
-    let timeString = "";
-    let age_grade = race ? race.ageGrade() : "";
-
-    // EYE export function so it can be used in PastRaceRow
-    if (time) {
-      let hours = Math.floor(time / 3600);
-      let minutes = Math.floor((time - (hours * 3600)) / 60);
-      let seconds = time - (hours * 3600) - (minutes * 60);
-
-      timeString = hours.toString().padStart(2, '0') + ':' + 
-        minutes.toString().padStart(2, '0') + ':' + 
-        seconds.toString().padStart(2, '0');
-    }
+    let label = race ? race.getDistanceLabel() : "";
+    let timeString = race ? race.getTimeString() : "";
+    let ageGrade = race ? race.ageGrade() : "";
 
     return (
       <tr>
         <td> {label} </td>
         <td> {timeString} </td>
-        <td> {age_grade} </td>
+        <td> {ageGrade} </td>
       </tr>
     );
   }

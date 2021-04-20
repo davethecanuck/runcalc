@@ -17,3 +17,16 @@ export const DISTANCE_OPTIONS = [
   { label: "26.2 mile", value: 42195 },
   { label: "50km", value: 50000 }
 ]
+
+// Initialize map version of DISTANCE_OPTIONS
+const LABEL_BY_DISTANCE = {}
+
+DISTANCE_OPTIONS.forEach((distance) => {
+  LABEL_BY_DISTANCE[distance.value] = distance.label;
+});
+
+// Return label for the distance, or just the raw meters if not found
+export function getLabel(meters) {
+  let label = LABEL_BY_DISTANCE[meters];
+  return label ? label : meters;
+}

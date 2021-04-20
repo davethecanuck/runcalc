@@ -35,17 +35,17 @@ export class PastRaceTable extends React.Component {
 class PastRaceRow extends React.Component {
   render() {
     let race = this.props.race;
-    let distance = race ? race.distance : "";
-    let time = race ? race.time : "";
+    let label = race ? race.getDistanceLabel() : "";
+    let timeString = race ? race.getTimeString() : "";
     let age = race ? race.scenario.age : "";
-    let age_grade = race ? race.ageGrade() : "";
+    let ageGrade = race ? race.ageGrade() : "";
 
     return (
       <tr>
-        <td> {distance} </td>
-        <td> {time} </td>
+        <td> {label} </td>
+        <td> {timeString} </td>
         <td> {age} </td>
-        <td> {age_grade} </td>
+        <td> {ageGrade} </td>
         <td> <input type="submit" name="past-race-remove" value="-" /> </td>
       </tr>
     );
