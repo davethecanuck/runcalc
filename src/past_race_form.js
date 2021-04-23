@@ -1,5 +1,11 @@
 import React from 'react';
 import Select from 'react-select';
+
+import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types'
+import styles from './styles';
+
 import { Scenario } from './scenario';
 import { Race } from './race';
 import { DISTANCE_OPTIONS } from './distance';
@@ -20,24 +26,26 @@ const FIELD = {
   }
 };
 
+const INITIAL_STATE = {
+  distance: '',
+  time: '',
+  age: '',
+  errors: {
+    distance: FIELD.distance.help,
+    time: FIELD.time.help,
+    age: '',  // Optional field
+  } 
+}
+
 // Form to add past race
 export class PastRaceForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      distance: null,
-      time: null,
-      age: null,
-      errors: {
-        distance: FIELD.distance.help,
-        time: FIELD.time.help,
-        age: '',  // Optional field
-      }
-    };
+    this.state = JSON.parse(JSON.stringify(INITIAL_STATE));
   }
 
   // Handle distance state
-  handleDistanceSelect = (selectedOption) => {
+  handleDistanceChange = (selectedOption) => {
     this.setState({ distance: selectedOption.value });
     let errors = {...this.state.errors};
     errors.distance = '';
@@ -70,6 +78,7 @@ export class PastRaceForm extends React.Component {
       s.age = this.state.age;
 
       // Parse time into [hh,mm,(ss)] array
+      // EYE time.js?
       let parsedTime = FIELD.time.pattern.exec(this.state.time);
       let timeParts = [];
       timeParts.push(parseInt(parsedTime[1]));
@@ -82,12 +91,17 @@ export class PastRaceForm extends React.Component {
 
       // Finally define the race object
       let race = new Race();
+      race.setDistance(parseInt(this.state.distance));
       race.setTimeParts(timeParts);
-      race.distance = parseInt(this.state.distance);
       race.scenario = s;
 
       // Submit to the parent past races list
       this.props.addPastRace(race);
+
+      // And clear the form
+      // EYE - select is not right
+      event.target.reset();
+      this.setState(JSON.parse(JSON.stringify(INITIAL_STATE)));
     }
     else {
       console.error('Invalid Form')
@@ -95,11 +109,13 @@ export class PastRaceForm extends React.Component {
   }
 
   render() {
-    const {errors} = this.state;
+    const { errors } = this.state;
+    const { classes } = this.props;
+
     return (
-      <div className='form-wrapper'>
+      <Paper className={classes.paper}> 
         <h2> Add a Past Race </h2>
-        <form onSubmit={this.handleSubmit} noValidate >
+        <form onSubmit={this.handleSubmit} autoComplete="off" noValidate >
           <div className='distance'>
             <label htmlFor="distance"> 
               Distance 
@@ -109,7 +125,7 @@ export class PastRaceForm extends React.Component {
             </label>
             <Select 
               options={DISTANCE_OPTIONS}
-              onChange={this.handleDistanceSelect}
+              onChange={this.handleDistanceChange}
             />
 
           </div>
@@ -129,13 +145,18 @@ export class PastRaceForm extends React.Component {
                 <span className='error'>{errors.age}</span>
               }
             </label>
-            <input type='text' name='age' onChange={this.handleChange} noValidate />
+            <input type='text' name='age' onChange={this.handleChange} 
+              noValidate />
           </div>
           <div className='submit'>
             <button> Add </button>
           </div>
         </form>
-      </div>
+      </Paper>
     );
   }
 }
+
+// Needed for Material UI styles
+PastRaceForm.propTypes = { classes: PropTypes.object.isRequired };
+export default withStyles(styles)(PastRaceForm);

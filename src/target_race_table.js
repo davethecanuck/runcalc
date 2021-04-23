@@ -1,14 +1,23 @@
 import React from 'react';
+
+import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types'
+import styles from './styles'
+
 import { DISTANCE_OPTIONS } from './distance.js';
 import { Race } from './race.js';
 
 // Predicted times for various distances
 export class TargetRaceTable extends React.Component {
   render() {
+    const { classes } = this.props;
+
     // EYE - we need to create a model based on the past races
     // and create output rows with the predictions from the model
     // for each distance. Maybe push all this to a model method?
     const rows = [];
+
     if (this.props.pastRaces.length > 0) {
       DISTANCE_OPTIONS.forEach((distance) => {
         // Get weighted predictions from past races
@@ -28,45 +37,48 @@ export class TargetRaceTable extends React.Component {
           // EYE - Converting to int for now. Should render as hh:mm:ss
           race.time = parseInt(totalTime / totalWeight);
           rows.push(
-           <TargetRaceRow race={race} key={rows.length}/>
+            <TargetRaceRow race={race} key={rows.length}/>
           );
         }
       });
     }
 
+    //  <div className="race-table"> 
     return (
-      <div className="race-table"> 
-        <h2> Target Races </h2>
-        <table>
+      <Paper className={classes.paper}>
+        <h2> Predicted Times </h2>
+        <table className='race-table'>
           <thead> 
             <tr>
               <th> Distance </th>
-              <th> Finish Time </th>
-              <th> Age Grade </th>
+              <th> Time </th>
+              <th> Pace </th>
             </tr>
           </thead>
           <tbody>
             {rows}
           </tbody>
         </table>
-      </div>
+      </Paper>
     );
   }
 }
 
-class TargetRaceRow extends React.Component {
-  render() {
-    let race = this.props.race;
-    let label = race ? race.getDistanceLabel() : "";
-    let timeString = race ? race.getTimeString() : "";
-    let ageGrade = race ? race.ageGrade() : "";
+function TargetRaceRow(props) {
+  let race = props.race;
+  let label = race ? race.getDistanceLabel() : "";
+  let timeString = race ? race.getTimeString() : "";
+  let pace = race ? race.getPaceString() : "";
 
-    return (
-      <tr>
-        <td> {label} </td>
-        <td> {timeString} </td>
-        <td> {ageGrade} </td>
-      </tr>
-    );
-  }
+  return (
+    <tr>
+      <td> {label} </td>
+      <td> {timeString} </td>
+      <td> {pace} </td>
+    </tr>
+  );
 }
+
+// Needed for Material UI styles
+TargetRaceTable.propTypes = { classes: PropTypes.object.isRequired };
+export default withStyles(styles)(TargetRaceTable);

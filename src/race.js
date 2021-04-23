@@ -58,9 +58,12 @@ export class Race {
   // a confidence weight for our prediction. 
   // EYE - add scenario as an input so time delta is part of confidence
   // and using our own race.scenario as well
+  // EYE - should move all but time out to a model object?
   predictTime(distance) {
-    // Using formula of doubling distance leading to doubling time + 6%
-    let adjust = 1.06 ** Math.log2(distance / this.distance);
+    // NOTE: 5% factor may need to shift as distances get away from the
+    // past race. 800m might not be accurate either.
+    let factor = 1.05;
+    let adjust = factor ** Math.log2(distance / this.distance);
     let time = this.time * (distance / this.distance) * adjust;
 
     // Weight is ratio of race distances diminishing predictive value 
@@ -73,21 +76,34 @@ export class Race {
     }
     let weight = ratio;  
 
+    /*
     console.log("1. predictTime this.distance=" + this.distance + 
         " this.time=" + this.time + " input.distance=" + distance + 
         " output.time=" + time + " adjust=" + adjust + 
         " ratio=" + ratio + " weight=" + weight);
+    */
 
     return [time, weight];
   }
 
-  // Return time as HH:MM:SS format
   getTimeString() {
+    return this.toHHMMSS(this.time);
+  }
+
+  // EYE min/mile
+  getPaceString() {
+    if (this.distance && this.time) {
+      return this.toHHMMSS(1609 * this.time/this.distance);
+    }
+  }
+
+  // Return time as HH:MM:SS format
+  toHHMMSS(time) {
     let timeString = "";
-    if (this.time) {
-      let hours = Math.floor(this.time / 3600);
-      let minutes = Math.floor((this.time - (hours * 3600)) / 60);
-      let seconds = this.time - (hours * 3600) - (minutes * 60);
+    if (time) {
+      let hours = Math.floor(time / 3600);
+      let minutes = Math.floor((time - (hours * 3600)) / 60);
+      let seconds = Math.floor(time - (hours * 3600) - (minutes * 60));
 
       timeString = hours.toString().padStart(2, '0') + ':' + 
         minutes.toString().padStart(2, '0') + ':' + 

@@ -1,5 +1,6 @@
+// 800m is the minimum distance where the model barely works, 
+// and 1500m is probably closer to reality for predictiveness
 export const DISTANCE_OPTIONS = [
-  { label: "400m", value: 400 },
   { label: "800m", value: 800 },
   { label: "1km", value: 1000 },
   { label: "1500m", value: 1500 },
