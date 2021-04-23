@@ -1,10 +1,13 @@
 import React from 'react';
 
-import Button from '@material-ui/core/Button';
+//import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types'
 import styles from './styles';
+import './table.css';
 
 // Past races used to predict future results
 export class PastRaceTable extends React.Component {
@@ -22,7 +25,7 @@ export class PastRaceTable extends React.Component {
     return (
       <Paper className={classes.paper}>
         <h2> Past Races </h2>
-        <table className='race-table'>
+        <table>
           <thead> 
             <tr>
               <th> Distance </th>
@@ -49,7 +52,6 @@ function PastRaceRow(props) {
   let age = race ? race.scenario.age : "";
   //let ageGrade = race ? race.ageGrade() : "";
 
-  //  <tr onClick={() => { console.log("Clicked " + label); }}>
   return (
     <tr>
       <td> {label} </td>
@@ -57,10 +59,12 @@ function PastRaceRow(props) {
       <td> {pace} </td>
       <td> {age} </td>
       <td> 
-        <Button variant="contained" name="past-race-remove" 
-          onClick={ () => props.removePastRace(props.raceId) }>
-          -
-        </Button>
+        <IconButton 
+            aria-label="delete" 
+            onClick={() => props.removePastRace(props.raceId)}
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
       </td>
 
     </tr>
