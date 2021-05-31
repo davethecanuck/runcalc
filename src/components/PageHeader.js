@@ -3,23 +3,25 @@ import React from 'react';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    backgroundColor: '#fdfdff',
+    '& .MuiPaper-root': {
+      //backgroundColor: '#fdfdff',
+      backgroundColor: '#fdfdff',
+    }
   },
   pageHeader: {
-    padding: theme.spacing(1),
+    padding: theme.spacing(0),
     display: 'flex',
     marginBottom: theme.spacing(0),
     alignItems: 'center',
-    //justifyContent: 'space-evenly',
   },
   pageIcon: {
     display: 'inline-block',
     padding: theme.spacing(1),
+    margin: theme.spacing(1),
     color: '#3c44b1',
   },
   pageTitle: {
     paddingLeft: theme.spacing(6),
-    paddingRight: theme.spacing(6),
 
     // Change opacity of subtitle
     '& .MuiTypography-subtitle2': {    // Inspect to get element name
@@ -30,24 +32,22 @@ const useStyles = makeStyles(theme => ({
 
 export default function PageHeader(props) {
   const classes = useStyles();
-  const {title, subtitle, icon, fab} = props;
+  const {title, icon} = props;
 
   return (
-    <Paper elevation={0} square className={classes.root}>
-      <div className={classes.pageHeader}>
-        <Card className={classes.pageIcon}>
-          {icon}
-        </Card>
-        <div className={classes.pageTitle}>
-          <Typography variant="h6" component="div">
-            {title}
-          </Typography>
-          <Typography variant="subtitle2" component="div">
-            {subtitle}
-          </Typography>
+    <div className={classes.root}>
+      <Paper elevation={1} square>
+        <div className={classes.pageHeader}>
+          <Card className={classes.pageIcon}>
+            {icon}
+          </Card>
+          <div className={classes.pageTitle}>
+            <Typography variant="h6" component="div">
+              {title}
+            </Typography>
+          </div>
         </div>
-      </div>
-        {fab}
-    </Paper>
+      </Paper>
+    </div>
   );
 }

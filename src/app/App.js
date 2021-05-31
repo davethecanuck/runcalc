@@ -47,6 +47,7 @@ const theme = createMuiTheme({
   }
 });
 
+// Main application styling
 const styles = {
   appMain: {
     paddingLeft: '0px',
@@ -55,20 +56,23 @@ const styles = {
 }
 
 // Define list of pages 
-// EYE - add race data as props
+// EYE - add race data and functions as page attr
 const pages = [
   { 
     title: "Profile", 
+    longTitle: "User Profile", 
     page: (<UserProfile />),
     icon: (<PermIdentityOutlined color="primary" />) 
   },
   { 
     title: "History", 
+    longTitle: "Race History", 
     page: (<History />),
     icon: (<HistoryOutlined color="primary" />)
   },
   { 
     title: "Predict", 
+    longTitle: "Race Predictions", 
     page: (<Predict />),
     icon: (<DirectionsRunOutlined color="primary" />) 
   },
