@@ -4,10 +4,10 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
-import PastRaceForm from './past_race_form.js';
-import PastRaceTable from './past_race_table.js';
-import TargetRaceTable from './target_race_table.js';
-import styles from './styles.js';
+import PastRaceForm from '../past_race_form.js';
+import PastRaceTable from '../past_race_table.js';
+import TargetRaceTable from '../target_race_table.js';
+import styles from '../styles.js';
 
 // Top level application 
 export class RaceCalc extends React.Component {
