@@ -1,5 +1,7 @@
 import { Card, makeStyles, Paper, Typography } from '@material-ui/core';
+import { HelpOutlineRounded } from '@material-ui/icons';
 import React from 'react';
+import ActionButton from '../controls/ActionButton';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,7 +23,8 @@ const useStyles = makeStyles(theme => ({
     color: '#3c44b1',
   },
   pageTitle: {
-    paddingLeft: theme.spacing(6),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
 
     // Change opacity of subtitle
     '& .MuiTypography-subtitle2': {    // Inspect to get element name
@@ -34,18 +37,20 @@ export default function PageHeader(props) {
   const classes = useStyles();
   const {title, icon} = props;
 
+  //        <Card className={classes.pageIcon}></Card>
   return (
     <div className={classes.root}>
       <Paper elevation={1} square>
         <div className={classes.pageHeader}>
-          <Card className={classes.pageIcon}>
-            {icon}
-          </Card>
+          <ActionButton>
+            <HelpOutlineRounded color="secondary"/>
+          </ActionButton>
           <div className={classes.pageTitle}>
             <Typography variant="h6" component="div">
               {title}
             </Typography>
           </div>
+          {icon}
         </div>
       </Paper>
     </div>

@@ -1,14 +1,15 @@
 import React, {useState} from 'react'
 import {createMuiTheme, CssBaseline, ThemeProvider, withStyles} 
   from '@material-ui/core'
-import { PermIdentityOutlined, HistoryOutlined, DirectionsRunOutlined } 
-  from '@material-ui/icons'
+import { PermIdentityOutlined, HistoryOutlined, DirectionsRunOutlined, 
+  ShowChartOutlined } from '@material-ui/icons'
 
 import Content from '../components/Content'
 import Footer from '../components/Footer'
 import UserProfile from '../pages/user_profile/UserProfile'
 import History from '../pages/history/History'
 import Predict from '../pages/predict/Predict'
+import Charts from '../pages/charts/Charts'
 
 // We can create theme objects like below, and save them in a 
 // map, and allow user to set the theme programatically
@@ -75,6 +76,12 @@ const pages = [
     longTitle: "Race Predictions", 
     page: (<Predict />),
     icon: (<DirectionsRunOutlined color="primary" />) 
+  },
+  { 
+    title: "Charts", 
+    longTitle: "Charts", 
+    page: (<Charts />),
+    icon: (<ShowChartOutlined color="primary" />) 
   },
 ]
 

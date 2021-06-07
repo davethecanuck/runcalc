@@ -1,11 +1,13 @@
-import { Scenario } from './scenario.js';
-import { getLabel } from './distance.js';
+import * as distanceService from './distance'
 
+// Encapsulate a race so we can infer reasonable times and calculate
+// things like pace and age grade
 export class Race {
-  distance = null;    // In meters
-  time = null;        // In seconds
-  timeParts = null;   // Array of hh:mm, mm:ss, or hh:mm:ss
-  scenario = new Scenario();
+  constructor(distance) {
+    this.distance = distance
+    this.timeParts = []
+    this.time = null
+  }
 
   setDistance(meters) {
     this.distance = meters;
@@ -18,9 +20,8 @@ export class Race {
     }
   }
 
-  // EYE TBD - get from scenario.age
-  ageGrade() {
-    return 75;
+  getDistanceName() {
+    return distanceService.getName(this.distance)
   }
 
   // Set time given array of [hh,mm,ss] or [mm,ss] or [hh,mm]
@@ -56,9 +57,6 @@ export class Race {
 
   // Predict time for a given distance, returning the time and 
   // a confidence weight for our prediction. 
-  // EYE - add scenario as an input so time delta is part of confidence
-  // and using our own race.scenario as well
-  // EYE - should move all but time out to a model object?
   predictTime(distance) {
     // NOTE: 5% factor may need to shift as distances get away from the
     // past race. 800m might not be accurate either.
@@ -68,21 +66,11 @@ export class Race {
 
     // Weight is ratio of race distances diminishing predictive value 
     // as distances get further apart. 
-    // EYE - we'll further adjust weight by age, altitude, etc. as 
-    // scenario data is fleshed out
     let ratio = distance / this.distance;
     if (ratio > 1.0) {
       ratio = 1 / ratio;
     }
     let weight = ratio;  
-
-    /*
-    console.log("1. predictTime this.distance=" + this.distance + 
-        " this.time=" + this.time + " input.distance=" + distance + 
-        " output.time=" + time + " adjust=" + adjust + 
-        " ratio=" + ratio + " weight=" + weight);
-    */
-
     return [time, weight];
   }
 
@@ -90,7 +78,7 @@ export class Race {
     return this.toHHMMSS(this.time);
   }
 
-  // EYE min/mile
+  // EYE - default to min/mile 
   getPaceString() {
     if (this.distance && this.time) {
       return this.toHHMMSS(1609 * this.time/this.distance);
@@ -110,10 +98,5 @@ export class Race {
         seconds.toString().padStart(2, '0');
     }
     return timeString;
-  }
-
-  // Return the race distance label
-  getDistanceLabel() {
-    return getLabel(this.distance);
   }
 }
