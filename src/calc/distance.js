@@ -24,12 +24,14 @@ const SELECT_OPTIONS = DISTANCES.map((row) => {
 })
 
 const NAME_BY_DISTANCE = DISTANCES.reduce((map, obj) => (
-  map[obj.distance] = obj.name, map), {}
-);
+    map[obj.distance] = obj.name, map
+  ), {}
+)
 
 const DISTANCE_BY_NAME = DISTANCES.reduce((map, obj) => (
-  map[obj.name] = obj.distance, map), {}
-);
+    map[obj.name] = obj.distance, map
+  ), {}
+)
 
 export function getName(distance) {
   return NAME_BY_DISTANCE[distance]
@@ -41,4 +43,8 @@ export function getDistance(name) {
 
 export function getSelectOptions() {
   return SELECT_OPTIONS
+}
+
+export function getDistances() {
+  return DISTANCES
 }

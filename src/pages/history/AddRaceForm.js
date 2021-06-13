@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { Form, useForm } from '../../components/useForm';
 import Controls from '../../controls/Controls';
 import * as distanceCalc from '../../calc/distance'
+import Race from '../../calc/Race'
 
 // Parsing and validation for the form fields. Regex should match blank
 // if value is optional. 
@@ -18,7 +19,7 @@ const FIELD = {
     help: 'Select a distance',
     initVal: '',
   },
-  'time': {
+  'hhmmss': {
     pattern: RegExp(/^\s*(\d+):?([0-5]\d{1}?)(:([0-5]\d{1}))?\s*$/),
     help: 'hh:mm:ss or hh:mm or mm:ss',
     initVal: '',
@@ -67,13 +68,32 @@ function AddRaceForm(props) {
     resetForm
   } = useForm(initialFValues, true, validate)
 
+  const parseFormToRace = () => {
+    let parsedTime = FIELD.hhmmss.pattern.exec(values.hhmmss);
+    let timeParts = [];
+    timeParts.push(parseInt(parsedTime[1]));
+    timeParts.push(parseInt(parsedTime[2]));
+
+    // Optional last part (ss or mm) is in offset 4 of regex
+    if (parsedTime[4] != null) {
+      timeParts.push(parseInt(parsedTime[4]));
+    }
+
+    // Finally define the race object
+    let race = new Race({
+      id: values.id,
+      distance: parseInt(values.distance), 
+      timeParts: timeParts,
+    })
+    return race
+  }
+
   const handleSubmit = e => {
     e.preventDefault()
 
     if (validate()) {
-      // EYE - we need to parse the time and update object to save
-      // - should generalize parsing using the pattern for each field
-      addOrEdit(values, resetForm)
+      const race = parseFormToRace()
+      addOrEdit(race, resetForm)
     }
   }
 
@@ -99,10 +119,10 @@ function AddRaceForm(props) {
           />
           <Controls.Input
             label="Finish Time"
-            name="time"
+            name="hhmmss"
             onChange={handleInputChange}
-            value={values.time}
-            error={errors.time}
+            value={values.hhmmss}
+            error={errors.hhmmss}
           />
           <div>
             <Controls.Button

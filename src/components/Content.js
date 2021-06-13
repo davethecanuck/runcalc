@@ -34,14 +34,21 @@ export default function Content(props) {
 // Common CSS for page content
 export const contentStyles = makeStyles(theme => ({
   pageContent: {
-    margin: theme.spacing(3),
-    padding: theme.spacing(3),
+    margin: theme.spacing(1),
+    marginBottom: theme.spacing(16),  // Stay above footer and FAB
+    padding: theme.spacing(1),
   },
   fabButton: {
     left: 'auto',
     right: theme.spacing(1),
-    top: theme.spacing(1),
-    bottom: 'auto',
     position: 'fixed',
+
+    // Floating button at top
+    //top: theme.spacing(9),
+    //bottom: 'auto',
+
+    // Floating button at bottom
+    bottom: theme.spacing(9),
+    top: 'auto',
   },
 }))

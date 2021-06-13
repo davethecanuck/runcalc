@@ -1,3 +1,5 @@
+import Race from '../calc/Race'
+
 const KEYS = {
   pastRaces: "pastRaces",
   distance: "distance",
@@ -16,7 +18,15 @@ export function getPastRaces() {
     pastRaces = JSON.stringify([])
     localStorage.setItem(KEYS.pastRaces, pastRaces)
   }
-  return JSON.parse(pastRaces)
+
+  // Convert raw json/obj to Race class instance
+  let rawData = JSON.parse(pastRaces)
+  let results = []
+  rawData.forEach(row => {
+    results.push(new Race(row))
+  })
+  //return JSON.parse(pastRaces)
+  return results
 }
 
 export function insertPastRace(data) {
@@ -35,6 +45,6 @@ export function updatePastRace(data) {
 
 export function deletePastRace(id) {
   let pastRaces = getPastRaces()
-  pastRaces = pastRaces.filter(x => x.id != id)
+  pastRaces = pastRaces.filter(x => x.id !== id)
   localStorage.setItem(KEYS.pastRaces, JSON.stringify(pastRaces))
 }

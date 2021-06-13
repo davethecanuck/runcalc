@@ -8,7 +8,7 @@ import Content from '../components/Content'
 import Footer from '../components/Footer'
 import UserProfile from '../pages/user_profile/UserProfile'
 import History from '../pages/history/History'
-import Predict from '../pages/predict/Predict'
+import RacePredictions from '../pages/predict/RacePredictions'
 import Charts from '../pages/charts/Charts'
 
 // We can create theme objects like below, and save them in a 
@@ -74,7 +74,7 @@ const pages = [
   { 
     title: "Predict", 
     longTitle: "Race Predictions", 
-    page: (<Predict />),
+    page: (<RacePredictions />),
     icon: (<DirectionsRunOutlined color="primary" />) 
   },
   { 
