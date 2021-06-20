@@ -12,6 +12,7 @@ export default  class Race {
     this.time         // int
     this.timeParts    // int[3] = hh,mm,ss
     this.hhmmss       // "hh:mm:ss" string
+    this.altitude     // int
     this.id           // unique id string
     */
 
@@ -23,6 +24,10 @@ export default  class Race {
   // Note that offset 0 is the most significant part (hh or mm).
   // Adjust time based on what's reasonable for the distance.
   recalcFields() {
+    // Default to 0 ft altitude
+    this.altitude |= 0
+
+    // Need distance as a minimum for interpreting the time
     if (this.distance != null) {
       this.distanceName = distanceService.getName(this.distance)
 
@@ -92,7 +97,7 @@ export default  class Race {
   // EYE - default to min/mile 
   getPaceString() {
     if (this.distance && this.time) {
-      return this.toHHMMSS(1609 * this.time/this.distance);
+      return this.toMMSS(1609 * this.time/this.distance);
     }
   }
 
@@ -111,18 +116,40 @@ export default  class Race {
     return timeString;
   }
 
-  // Predict time for a given distance, returning the time and 
-  // a confidence weight for our prediction. 
-  predictTime(distance) {
-    // NOTE: 5% factor may need to shift as distances get away from the
-    // past race. 800m might not be accurate either.
-    let factor = 1.05;
-    let adjust = factor ** Math.log2(distance / this.distance);
-    let time = this.time * (distance / this.distance) * adjust;
+  // Return time as MM:SS string format
+  toMMSS(time) {
+    let timeString = "";
+    if (time) {
+      let minutes = Math.floor(time / 60);
+      let seconds = Math.floor(time - (minutes * 60));
+
+      timeString = minutes.toString().padStart(2, '0') + ':' + 
+        seconds.toString().padStart(2, '0');
+    }
+    return timeString;
+  }
+
+  // Based on polynomial regression of men's and women's world record times.
+  // The best fit is mostly a 2nd-degree curve, but with tail at shorter 
+  // distances necessitating a 3rd degree polynomial. 
+  bestTime(distance) {
+    return -19.964 + 0.152*distance 
+      + 0.0000009098*(distance**2) - 9.556E-12*(distance**3)
+  }
+
+  // Essentially a raw age-grade type score against the reference
+  // predicted time (based on world record)
+  gradeFactor() {
+    return this.time / this.bestTime(this.distance)
+  }
+
+  // Use this race to predict the time for another race
+  predictTime(race) {
+    const time = this.bestTime(race.distance) * this.gradeFactor()
 
     // Weight is ratio of race distances diminishing predictive value 
     // as distances get further apart. 
-    let ratio = distance / this.distance;
+    let ratio = race.distance / this.distance;
     if (ratio > 1.0) {
       ratio = 1 / ratio;
     }

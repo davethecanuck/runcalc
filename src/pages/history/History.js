@@ -51,6 +51,7 @@ function History(props) {
   const headerCells = [
     {id:'distance', label:'Distance', disableSort:true},
     {id:'time', label:'Time', disableSort:true},
+    {id:'altitude', label:'Altitude', disableSort:true},
     {disableSort:true} 
   ]
 
@@ -88,6 +89,7 @@ function History(props) {
                 <TableRow key={item.id}>
                   <TableCell> {item.distanceName} </TableCell>
                   <TableCell> {item.hhmmss} </TableCell>
+                  <TableCell> {item.altitude} </TableCell>
                   <TableCell>
                     <Controls.ActionButton color="primary" fontSize="small"
                       onClick={() => { openInPopup(item) }}

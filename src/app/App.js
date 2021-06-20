@@ -2,14 +2,15 @@ import React, {useState} from 'react'
 import {createMuiTheme, CssBaseline, ThemeProvider, withStyles} 
   from '@material-ui/core'
 import { PermIdentityOutlined, HistoryOutlined, DirectionsRunOutlined, 
-  ShowChartOutlined } from '@material-ui/icons'
+  ShowChartOutlined, 
+  HelpOutlineRounded} from '@material-ui/icons'
 
 import Content from '../components/Content'
 import Footer from '../components/Footer'
 import UserProfile from '../pages/user_profile/UserProfile'
 import History from '../pages/history/History'
 import RacePredictions from '../pages/predict/RacePredictions'
-import Charts from '../pages/charts/Charts'
+import Help from '../pages/help/Help'
 
 // We can create theme objects like below, and save them in a 
 // map, and allow user to set the theme programatically
@@ -57,7 +58,6 @@ const styles = {
 }
 
 // Define list of pages 
-// EYE - add race data and functions as page attr
 const pages = [
   { 
     title: "Profile", 
@@ -78,10 +78,10 @@ const pages = [
     icon: (<DirectionsRunOutlined color="primary" />) 
   },
   { 
-    title: "Charts", 
-    longTitle: "Charts", 
-    page: (<Charts />),
-    icon: (<ShowChartOutlined color="primary" />) 
+    title: "Help", 
+    longTitle: "Help", 
+    page: (<Help />),
+    icon: (<HelpOutlineRounded color="secondary" />) 
   },
 ]
 
@@ -90,7 +90,7 @@ const App = (props) => {
 
   // Defaulting to History page, but should encourage profile
   // if no cache data found
-  const [currentPage, setCurrentPage] = useState("History")
+  const [currentPage, setCurrentPage] = useState(pages[1].title)
 
   return (
     <ThemeProvider theme={theme}>

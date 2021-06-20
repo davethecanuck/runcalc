@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(0),
     display: 'flex',
     marginBottom: theme.spacing(0),
+    justifyContent: 'center',
     alignItems: 'center',
   },
   pageTitle: {
@@ -35,15 +36,12 @@ export default function PageHeader(props) {
     <div className={classes.root}>
       <Paper elevation={1} square>
         <div className={classes.pageHeader}>
-          <ActionButton>
-            <HelpOutlineRounded color="secondary"/>
-          </ActionButton>
+          {icon}
           <div className={classes.pageTitle}>
             <Typography variant="h6" component="div">
               {title}
             </Typography>
           </div>
-          {icon}
         </div>
       </Paper>
     </div>

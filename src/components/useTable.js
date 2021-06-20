@@ -9,9 +9,12 @@ const useStyles = makeStyles(theme => ({
       fontWeight:  '600',
       color: theme.palette.primary.main,
       backgroundColor: theme.palette.primary.light,
+      textAlign: 'left',
     },
     '& tbody td': {
       fontWeight: '400',
+      padding: theme.spacing(1),
+      textAlign: 'left',
     },
     '& tbody tr:hover': {
       backgroundColor: '#fffbf2',

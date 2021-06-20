@@ -12,7 +12,11 @@ export function getRacePredictions() {
     let totalTime = 0.0
     let totalWeight = 0.0
     historyService.getPastRaces().forEach(pastRace => {
-      const [time, weight] = pastRace.predictTime(target.distance)
+      const [time, weight] = pastRace.predictTime(
+        // EYE - Can update target race with altitude/age/etc.
+        // based on whatever the scenario is set to
+        new Race({distance: target.distance})
+      )
       totalTime += time * weight
       totalWeight += weight
     })

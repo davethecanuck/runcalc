@@ -24,6 +24,11 @@ const FIELD = {
     help: 'hh:mm:ss or hh:mm or mm:ss',
     initVal: '',
   },
+  'altitude': {
+    pattern: RegExp(/\s*(\d+)\s*$/),
+    help: 'Race altitude (ft)',
+    initVal: 0,
+  }
 }
 
 // EYE - Could also change useForm() to expect the FIELD format
@@ -83,6 +88,7 @@ function AddRaceForm(props) {
     let race = new Race({
       id: values.id,
       distance: parseInt(values.distance), 
+      altitude: parseInt(values.altitude), 
       timeParts: timeParts,
     })
     return race
@@ -123,6 +129,13 @@ function AddRaceForm(props) {
             onChange={handleInputChange}
             value={values.hhmmss}
             error={errors.hhmmss}
+          />
+          <Controls.Input
+            label="Altitude"
+            name="altitude"
+            onChange={handleInputChange}
+            value={values.altitude}
+            error={errors.altitude}
           />
           <div>
             <Controls.Button
