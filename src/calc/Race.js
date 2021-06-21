@@ -132,20 +132,37 @@ export default  class Race {
   // Based on polynomial regression of men's and women's world record times.
   // The best fit is mostly a 2nd-degree curve, but with tail at shorter 
   // distances necessitating a 3rd degree polynomial. 
-  bestTime(distance) {
-    return -19.964 + 0.152*distance 
-      + 0.0000009098*(distance**2) - 9.556E-12*(distance**3)
+  bestTime() {
+    return -19.964 + 0.152*this.distance 
+      + 0.0000009098*(this.distance**2) - 9.556E-12*(this.distance**3)
+  }
+
+  // Adjustment factor for altitude. Based on regression of NCAA altitude
+  // tables, we see that the factor gets larger the longer you run (in time
+  // as opposed to distance). So if our race took 20% longer than the 
+  // reference bestTime, then we do our altitude factor given a distance 
+  // that is 20% longer.
+  // Note also that we subtract the equivalent of 600m from the distance
+  // as this was found through regression to be a good adjustment, largely
+  // based on the first 600 of an 800 being anaerobic.
+  altitudeFactor() {
+    let adjDistance = (this.distance - 600) * this.rawGradeFactor();
+    let regInput = (this.altitude**2.2 * adjDistance**0.3) / 100000000
+    return 1 + 0.00178*regInput - 0.0000113*regInput**2
   }
 
   // Essentially a raw age-grade type score against the reference
   // predicted time (based on world record)
-  gradeFactor() {
-    return this.time / this.bestTime(this.distance)
+  rawGradeFactor() {
+    return this.time / this.bestTime()
   }
 
-  // Use this race to predict the time for another race
+  // Use this race to predict the time for another race. 
   predictTime(race) {
-    const time = this.bestTime(race.distance) * this.gradeFactor()
+    // Set race time to expected at sea level so we can calculate the 
+    // altitude adjustment for that race
+    race.time = race.bestTime() * this.rawGradeFactor() / this.altitudeFactor()
+    const time = race.time * race.altitudeFactor()
 
     // Weight is ratio of race distances diminishing predictive value 
     // as distances get further apart. 
