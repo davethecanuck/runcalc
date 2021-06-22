@@ -9,6 +9,13 @@ function UserProfile(props) {
     <div>
       <Paper className={classes.pageContent}>
         <div> TBD User Profile Content </div>
+        <div> Age </div>
+        <div> Gender </div>
+        <div> Default race elevation </div>
+        <div> Metric pace/elevation </div>
+        <div> Language </div>
+        <div> Color theme </div>
+        <div> Save options (Google Drive?)</div>
       </Paper>
     </div>
   )

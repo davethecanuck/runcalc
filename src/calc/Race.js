@@ -91,42 +91,33 @@ export default  class Race {
   }
 
   getHHMMSS() {
-    return this.toHHMMSS(this.getTime());
-  }
-
-  // EYE - default to min/mile 
-  getPaceString() {
-    if (this.distance && this.time) {
-      return this.toMMSS(1609 * this.time/this.distance);
-    }
-  }
-
-  // Return time as HH:MM:SS string format
-  toHHMMSS(time) {
-    let timeString = "";
+    let time = this.getTime()
+    let hhmmss = "";
     if (time) {
       let hours = Math.floor(time / 3600);
       let minutes = Math.floor((time - (hours * 3600)) / 60);
       let seconds = Math.floor(time - (hours * 3600) - (minutes * 60));
 
-      timeString = hours.toString().padStart(2, '0') + ':' + 
+      hhmmss = hours.toString().padStart(2, '0') + ':' + 
         minutes.toString().padStart(2, '0') + ':' + 
         seconds.toString().padStart(2, '0');
     }
-    return timeString;
+    return hhmmss;
   }
 
-  // Return time as MM:SS string format
-  toMMSS(time) {
-    let timeString = "";
-    if (time) {
+  // NOTE - defaulting to min/mile 
+  getPaceString() {
+    let mmss = "";
+    if (this.distance && this.time) {
+      //return this.toMMSS(1609 * this.time/this.distance);
+      let time = 1609 * this.time/this.distance
       let minutes = Math.floor(time / 60);
       let seconds = Math.floor(time - (minutes * 60));
 
-      timeString = minutes.toString().padStart(2, '0') + ':' + 
+      mmss = minutes.toString().padStart(2, '0') + ':' + 
         seconds.toString().padStart(2, '0');
     }
-    return timeString;
+    return mmss;
   }
 
   // Based on polynomial regression of men's and women's world record times.
@@ -141,12 +132,18 @@ export default  class Race {
   // tables, we see that the factor gets larger the longer you run (in time
   // as opposed to distance). So if our race took 20% longer than the 
   // reference bestTime, then we do our altitude factor given a distance 
-  // that is 20% longer.
+  // that is 20% longer. NOTE: For now we just use the raw distances as this
+  // results in a time prediction closer to the NCAA tables, but those tables
+  // may be flawed. E.g. The 10,000m adjustment is the same for a given altitude
+  // regardless if the runner was a D1 male or D3 female.
+  // 
   // Note also that we subtract the equivalent of 600m from the distance
   // as this was found through regression to be a good adjustment, largely
   // based on the first 600 of an 800 being anaerobic.
   altitudeFactor() {
-    let adjDistance = (this.distance - 600) * this.rawGradeFactor();
+    // Alternate where we extend distance to account for slower times
+    //let adjDistance = (this.distance - 600) * this.rawGradeFactor();
+    let adjDistance = (this.distance - 600)
     let regInput = (this.altitude**2.2 * adjDistance**0.3) / 100000000
     return 1 + 0.00178*regInput - 0.0000113*regInput**2
   }
@@ -159,7 +156,7 @@ export default  class Race {
 
   // Use this race to predict the time for another race. 
   predictTime(race) {
-    // Set race time to expected at sea level so we can calculate the 
+    // Set race time to expected value at sea level so we can calculate the 
     // altitude adjustment for that race
     race.time = race.bestTime() * this.rawGradeFactor() / this.altitudeFactor()
     const time = race.time * race.altitudeFactor()
