@@ -92,7 +92,7 @@ const App = (props) => {
 
   // Defaulting to History page, but should encourage profile
   // if no cache data found
-  const [currentPage, setCurrentPage] = useState(pages[1].title)
+  const [currentPage, setCurrentPage] = useState(pages[0].title)
 
   return (
     <ThemeProvider theme={theme}>
