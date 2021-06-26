@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.js": "/runcalc/static/js/main.b1598635.chunk.js",
-    "main.js.map": "/runcalc/static/js/main.b1598635.chunk.js.map",
+    "main.js": "/runcalc/static/js/main.fc2ac630.chunk.js",
+    "main.js.map": "/runcalc/static/js/main.fc2ac630.chunk.js.map",
     "runtime-main.js": "/runcalc/static/js/runtime-main.2fe47ddb.js",
     "runtime-main.js.map": "/runcalc/static/js/runtime-main.2fe47ddb.js.map",
-    "static/js/2.e8e66ee2.chunk.js": "/runcalc/static/js/2.e8e66ee2.chunk.js",
-    "static/js/2.e8e66ee2.chunk.js.map": "/runcalc/static/js/2.e8e66ee2.chunk.js.map",
+    "static/js/2.608a9314.chunk.js": "/runcalc/static/js/2.608a9314.chunk.js",
+    "static/js/2.608a9314.chunk.js.map": "/runcalc/static/js/2.608a9314.chunk.js.map",
     "index.html": "/runcalc/index.html",
-    "static/js/2.e8e66ee2.chunk.js.LICENSE.txt": "/runcalc/static/js/2.e8e66ee2.chunk.js.LICENSE.txt"
+    "static/js/2.608a9314.chunk.js.LICENSE.txt": "/runcalc/static/js/2.608a9314.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.2fe47ddb.js",
-    "static/js/2.e8e66ee2.chunk.js",
-    "static/js/main.b1598635.chunk.js"
+    "static/js/2.608a9314.chunk.js",
+    "static/js/main.fc2ac630.chunk.js"
   ]
 }
