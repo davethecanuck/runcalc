@@ -143,9 +143,19 @@ export default  class Race {
   altitudeFactor() {
     // Alternate where we extend distance to account for slower times
     //let adjDistance = (this.distance - 600) * this.rawGradeFactor();
+    /*
     let adjDistance = (this.distance - 600)
     let regInput = (this.altitude**2.2 * adjDistance**0.3) / 100000000
-    return 1 + 0.00178*regInput - 0.0000113*regInput**2
+    */
+    let adjDistance = (this.distance - 790)
+    let regInput = (this.altitude**2.15 * adjDistance**0.25) / 100000000
+    
+    // 2nd-degree polynomial regression
+    // EYE - This breaks down with really high altitudes, and can go negative
+    //return 1 + 0.00178*regInput - 0.0000113*regInput**2
+
+    // 1st-degree (linear) regression
+    return 1 + 0.00127*regInput
   }
 
   // Essentially a raw age-grade type score against the reference
