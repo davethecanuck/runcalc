@@ -33,6 +33,11 @@ export default function Content(props) {
 
 // Common CSS for page content
 export const contentStyles = makeStyles(theme => ({
+  pageContentHead: {
+    margin: theme.spacing(1),
+    marginBottom: theme.spacing(1), 
+    padding: theme.spacing(1),
+  },
   pageContent: {
     margin: theme.spacing(1),
     marginBottom: theme.spacing(16),  // Stay above footer and FAB

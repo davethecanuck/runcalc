@@ -22,24 +22,33 @@ function Help(props) {
         </p>
         <h2> How does this work? </h2> 
         <p>
-          A regression of world records by men and women for all major events
+          A regression of 
+          <a href='https://www.worldathletics.org/records/by-category/world-records'
+          target='_blank'> world records </a> by men and women for all major events
           from 400m to marathon was done to create a formula for predicting 
           race times for a given distance based on a time for a different distance.
           The resultant formula is very accurate for predicting men's world records
           for all distances given a single women's distance record (and vice versa) 
-          when a male->female age grade equivalent of about 90.9% is applied.
+          when a male-&lt;female age grade equivalent of about 90.9% is applied.
           For slower runners like myself (around 68% age grade) the predictions match 
           up as well. 
         </p>
         <p>
           A similar regression was done for altitude adjustements based on raw
-          data from the NCAA altitude adjustment tables. The formula has been tweaked
+          data from the NCAA altitude adjustment <a href='https://www.ustfccca.org/assets/ncaa-info/2009-outdoor-alt-adjust.pdf'
+          target='_blank'> tables</a>. 
+          The formula has been tweaked
           to account for physiological effects where below 800m you might run faster 
           at altitude (less air resistance, and you can run with a certain amount
           oxygen debt). Another interesting finding from the NCAA tables is that 
           the longer you run at altitude the larger the effect of a given altitude. 
           For example, if you run 3% slower at a given altitude in the 5000m, you might
-          run 4% slower in the 10000m. 
+          run 4% slower in the 10000m. A consequence of this is that a more accurate 
+          altitude table might be based on time rather than distance. This gets a bit
+          tricky as time now becomes both the input and output, but it would not be hard
+          to adjust the algorithm to do this. It does however produce somewhat different
+          results than the standard NCAA tables (e.g. Adjustment for D3 woman will be 
+          greater than that for a D1 male, but NCAA uses the same % adjustment for both).
         </p>  
         <p>
           Roughly, the formula takes the square of the altitude times the square root of the

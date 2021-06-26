@@ -162,7 +162,7 @@ export default  class Race {
     const time = race.time * race.altitudeFactor()
 
     // Weight is ratio of race distances diminishing predictive value 
-    // as distances get further apart. 
+    // as distances get further apart. TBD - Also discount older results
     let ratio = race.distance / this.distance;
     if (ratio > 1.0) {
       ratio = 1 / ratio;

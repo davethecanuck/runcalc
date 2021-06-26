@@ -1,7 +1,5 @@
 import { makeStyles, Paper, Typography } from '@material-ui/core';
-import { HelpOutlineRounded } from '@material-ui/icons';
 import React from 'react';
-import ActionButton from '../controls/ActionButton';
 
 const useStyles = makeStyles(theme => ({
   root: {

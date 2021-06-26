@@ -2,8 +2,6 @@ import Race from '../calc/Race'
 
 const KEYS = {
   pastRaces: "pastRaces",
-  distance: "distance",
-  time: "time",
   id: "id",
 }
 
@@ -25,7 +23,6 @@ export function getPastRaces() {
   rawData.forEach(row => {
     results.push(new Race(row))
   })
-  //return JSON.parse(pastRaces)
   return results
 }
 

@@ -49,8 +49,7 @@ function useTable(records, headCells, filterFn) {
     setOrderBy(cellId)
   }
 
-  // EYE - or no props?
-  const TblHead = props => (
+  const TblHead = () => (
     <TableHead>
       <TableRow>
         {

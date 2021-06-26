@@ -133,6 +133,7 @@ function AddRaceForm(props) {
           <Controls.Input
             label="Altitude"
             name="altitude"
+            type="number"
             onChange={handleInputChange}
             value={values.altitude}
             error={errors.altitude}
