@@ -63,4 +63,4 @@ export const contentStyles = makeStyles(theme => ({
     bottom: theme.spacing(9),
     top: 'auto',
   },
-}))
+}), {index: 1})
