@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import { Paper, TableBody, TableCell, TableRow, Typography } from '@material-ui/core';
 import { contentStyles } from '../../components/Content'
 import useTable from '../../components/useTable'

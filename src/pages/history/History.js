@@ -1,4 +1,5 @@
-import { Fab, Paper, TableBody, TableCell, TableRow } from '@material-ui/core';
+import { Fab, Paper, TableBody, TableCell, TableRow, makeStyles } 
+  from '@material-ui/core';
 import { AddOutlined, EditOutlined } from '@material-ui/icons';
 import React, {useState} from 'react';
 import Popup from '../../components/Popup'
@@ -10,8 +11,20 @@ import * as historyService from '../../services/pastRaces'
 import Controls from '../../controls/Controls';
 import CloseIcon from '@material-ui/icons/Close';
 
+// Working around npm run deploy issue
+export const fabStyles = makeStyles(theme => ({
+  fabButton: {
+    left: 'auto',
+    right: theme.spacing(1),
+    position: 'fixed',
+    bottom: theme.spacing(9),
+    top: 'auto',
+  },
+}))
+
 function History(props) {
   const classes = contentStyles()
+  const fabClasses = fabStyles()
   const [records, setRecords] = useState(historyService.getPastRaces())
   const [recordForEdit, setRecordForEdit] = useState(null)
   const [filterFn, setFilterFn] = useState({fn: items => { return items }})
@@ -21,6 +34,16 @@ function History(props) {
 
   // Open popup automatically if no records
   const [openPopup, setOpenPopup] = useState(records.length === 0)   
+
+  const addButton = (classes, setOpenPopup) => (
+    <Fab variant="extended" aria-label="Add Race" color="secondary"
+      className={fabClasses.fabButton}
+      onClick={() => { setOpenPopup(true) }}
+    >
+      <AddOutlined />
+      Add Race
+    </Fab>
+  )
 
   const addOrEdit = (race, resetForm) => {
     // ID is 0 on new record until it is inserted
@@ -126,15 +149,5 @@ function History(props) {
     </div>
   )
 }
-
-const addButton = (classes, setOpenPopup) => (
-  <Fab variant="extended" aria-label="Add Race" color="secondary"
-    className={classes.fabButton}
-    onClick={() => { setOpenPopup(true) }}
-  >
-    <AddOutlined />
-    Add Race
-  </Fab>
-)
 
 export default History;
