@@ -22,16 +22,6 @@ function History(props) {
   // Open popup automatically if no records
   const [openPopup, setOpenPopup] = useState(records.length === 0)   
 
-  const addButton = (classes, setOpenPopup) => (
-    <Fab variant="extended" aria-label="Add Race" color="secondary"
-      className={classes.fabButton}
-      onClick={() => { setOpenPopup(true) }}
-    >
-      <AddOutlined />
-      Add Race
-    </Fab>
-  )
-
   const addOrEdit = (race, resetForm) => {
     // ID is 0 on new record until it is inserted
     if (race.id == null || race.id === 0) {
@@ -85,7 +75,13 @@ function History(props) {
 
   return (
     <div>
-      {addButton(classes, setOpenPopup)}
+      <Fab variant="extended" aria-label="Add Race" color="secondary"
+        className={classes.fabButton}
+        onClick={() => { setOpenPopup(true) }}
+      >
+        <AddOutlined />
+        Add Race
+      </Fab>
       <Paper className={classes.pageContentMain}>
         <TblContainer>
           <TblHead />
