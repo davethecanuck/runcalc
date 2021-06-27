@@ -5,6 +5,7 @@ import PageHeader from './PageHeader'
 // Opens current page content
 export default function Content(props) {
   const { pages, currentPage } = props
+  const classes = contentStyles()
 
   // Find the page that is currently set to be open
   let content = null
@@ -26,19 +27,25 @@ export default function Content(props) {
   return (
     <div>
       {header}
-      {content}
+      <div className={classes.pageContent}>
+        {content}
+      </div>
     </div>
   );
 }
 
 // Common CSS for page content
 export const contentStyles = makeStyles(theme => ({
+  pageContent: {
+    maxWidth: '50em',
+    margin: 'auto',
+  },
   pageContentHead: {
     margin: theme.spacing(1),
     marginBottom: theme.spacing(1), 
     padding: theme.spacing(1),
   },
-  pageContent: {
+  pageContentMain: {
     margin: theme.spacing(1),
     marginBottom: theme.spacing(16),  // Stay above footer and FAB
     padding: theme.spacing(1),

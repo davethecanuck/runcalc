@@ -16,8 +16,10 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
   },
   pageTitle: {
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
+    padding: theme.spacing(0.5),
+    //paddingBottom: theme.spacing(1),
+    //paddingLeft: theme.spacing(1),
+    //paddingRight: theme.spacing(1),
 
     // Change opacity of subtitle
     '& .MuiTypography-subtitle2': {    // Inspect to get element name

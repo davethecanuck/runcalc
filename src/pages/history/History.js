@@ -86,7 +86,7 @@ function History(props) {
   return (
     <div>
       {addButton(classes, setOpenPopup)}
-      <Paper className={classes.pageContent}>
+      <Paper className={classes.pageContentMain}>
         <TblContainer>
           <TblHead />
           <TableBody>

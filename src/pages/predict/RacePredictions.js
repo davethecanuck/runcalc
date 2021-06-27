@@ -45,7 +45,7 @@ function RacePredictions(props) {
         />
       </Paper>
 
-      <Paper className={classes.pageContent}>
+      <Paper className={classes.pageContentMain}>
         <TblContainer>
           <TblHead />
           <TableBody>

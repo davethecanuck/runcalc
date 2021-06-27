@@ -7,7 +7,7 @@ function UserProfile(props) {
 
   return (
     <div>
-      <Paper className={classes.pageContent}>
+      <Paper className={classes.pageContentMain}>
         <div> TBD User Profile Content </div>
         <div> Age </div>
         <div> Gender </div>

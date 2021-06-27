@@ -7,7 +7,7 @@ function Help(props) {
 
   return (
     <div>
-      <Paper className={classes.pageContent}>
+      <Paper className={classes.pageContentMain}>
         <h2> What does this do? </h2>
         <p>
           This application uses your running race history to predict your time 
