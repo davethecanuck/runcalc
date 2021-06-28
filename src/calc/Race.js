@@ -143,6 +143,12 @@ export default  class Race {
   altitudeFactor() {
     // Alternate where we extend distance to account for slower times
     let adjDistance = (this.distance - 790) * this.rawGradeFactor();
+
+    // Regressions were done against D1 NCAA women's times, so the 
+    // rawGradeFactor (based on male world record) needs to be adjusted down.
+    // D1 10km reference time is  33:30, and male record is 26:11 (1.28:1 ratio)
+    adjDistance /= 1.28
+
     //let adjDistance = (this.distance - 790)
     let regInput = (this.altitude**1.85 * adjDistance**0.22) / 100000000
     
