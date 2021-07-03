@@ -1,21 +1,25 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Paper} from '@material-ui/core'
 import {contentStyles} from '../../components/Content'
+import ProfileForm from './ProfileForm'
+import * as profileService from '../../services/userProfile'
 
 function UserProfile(props) {
   const classes = contentStyles()
+  const [profile, setProfile] = useState(profileService.getProfile())
+
+  const updateProfile = (profile) => {
+    profileService.updateProfile(profile)
+    setProfile(profile)
+  }
 
   return (
     <div>
       <Paper className={classes.pageContentMain}>
-        <div> TBD User Profile Content </div>
-        <div> Age </div>
-        <div> Gender </div>
-        <div> Default race elevation </div>
-        <div> Metric pace/elevation </div>
-        <div> Language </div>
-        <div> Color theme </div>
-        <div> Save options (Google Drive?)</div>
+        <ProfileForm 
+          updateProfile={updateProfile}
+          profile={profile}
+        />
       </Paper>
     </div>
   )

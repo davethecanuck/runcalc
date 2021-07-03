@@ -59,14 +59,12 @@ const styles = {
 
 // Define list of pages 
 const pages = [
-  /* NOTE: Leaving out until properly implemented
   { 
     title: "Profile", 
     longTitle: "User Profile", 
     page: (<UserProfile />),
     icon: (<PermIdentityOutlined color="primary" />) 
   },
-  */
   { 
     title: "History", 
     longTitle: "Race History", 

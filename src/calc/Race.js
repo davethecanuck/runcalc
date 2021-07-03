@@ -137,26 +137,17 @@ export default  class Race {
   // may be flawed. E.g. The 10,000m adjustment is the same for a given altitude
   // regardless if the runner was a D1 male or D3 female.
   // 
-  // Note also that we subtract the equivalent of 600m from the distance
+  // Note also that we subtract the equivalent of 790m from the distance
   // as this was found through regression to be a good adjustment, largely
-  // based on the first 600 of an 800 being anaerobic.
+  // based on the 800m being largely anaerobic (altitude adjustment is small).
   altitudeFactor() {
-    // Alternate where we extend distance to account for slower times
-    let adjDistance = (this.distance - 790) * this.rawGradeFactor();
-
     // Regressions were done against D1 NCAA women's times, so the 
     // rawGradeFactor (based on male world record) needs to be adjusted down.
     // D1 10km reference time is  33:30, and male record is 26:11 (1.28:1 ratio)
-    adjDistance /= 1.28
-
-    //let adjDistance = (this.distance - 790)
+    let adjDistance = (this.distance - 790) * this.rawGradeFactor() / 1.28
     let regInput = (this.altitude**1.85 * adjDistance**0.22) / 100000000
     
-    // 2nd-degree polynomial regression
-    // EYE - This breaks down with really high altitudes, and can go negative
-    //return 1 + 0.00437*regInput - 0.0000715*regInput**2
-
-    // 1st-degree (linear) regression
+    // 1st-degree (linear) regression of the 'regInput' formula
     return 1 + 0.0595*regInput
   }
 
