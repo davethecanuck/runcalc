@@ -1,4 +1,5 @@
 import * as distanceService from './distance'
+import * as profileService from '../services/userProfile'
 
 // Encapsulate a race so we can infer reasonable times and calculate
 // things like pace and age grade
@@ -13,6 +14,7 @@ export default  class Race {
     this.timeParts    // int[3] = hh,mm,ss
     this.hhmmss       // "hh:mm:ss" string
     this.altitude     // int
+    this.age          // int
     this.id           // unique id string
     */
 
@@ -24,8 +26,17 @@ export default  class Race {
   // Note that offset 0 is the most significant part (hh or mm).
   // Adjust time based on what's reasonable for the distance.
   recalcFields() {
-    // Default to 0 ft altitude
-    this.altitude |= 0
+    // Default to 0 ft altitude and current age
+    if (!this.altitude) {
+      this.altitude = 0
+    }
+    const profile = profileService.getProfile()
+    if (!this.age) {
+      this.age = new Date().getFullYear() - profile.birthYear
+      if (this.age < 1) {
+        this.age = 25
+      }
+    }
 
     // Need distance as a minimum for interpreting the time
     if (this.distance != null) {

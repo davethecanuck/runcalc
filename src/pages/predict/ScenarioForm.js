@@ -1,18 +1,27 @@
-import { Grid } from '@material-ui/core';
-import React, { useEffect } from 'react';
-import { Form, useForm } from '../../components/useForm';
-import Controls from '../../controls/Controls';
+import { Grid } from '@material-ui/core'
+import React, { useEffect } from 'react'
+import { Form, useForm } from '../../components/useForm'
+import Controls from '../../controls/Controls'
+import * as scenarioService from '../../services/scenario'
 
-// Parsing and validation for the form fields. Regex should match blank
-// if value is optional. 
+// Initialize the form with the values from storage, or the
+// default values we get from the scenario service
+const initScenario = scenarioService.getScenario()
+
 const FIELD = {
   'altitude': {
-    pattern: RegExp(/\s*(\d+)\s*$/),
+    pattern: RegExp(/^\s*(\d+)\s*$/),
     help: 'Race altitude (ft)',
-    initVal: 0,
+    initVal: initScenario.altitude,
+  }, 
+  'age': {
+    pattern: RegExp(/^\s*([1-9]\d*)\s*$/),
+    help: 'Age on race day',
+    initVal: initScenario.age,
   }
 }
 
+// Initialize values with stored value if possible
 let initialFValues = {}
 Object.keys(FIELD).forEach((key) => {
   initialFValues[key] = FIELD[key].initVal
@@ -39,7 +48,8 @@ function ScenarioForm(props) {
     const isValid = Object.values(temp).every(x => x === "")
     if (isValid) {
       updateScenario({ 
-        altitude: parseInt(fieldValues.altitude) 
+        altitude: parseInt(fieldValues.altitude),
+        age: parseInt(fieldValues.age) 
       })
     }
 
@@ -86,6 +96,16 @@ function ScenarioForm(props) {
             onChange={handleInputChange}
             value={values.altitude}
             error={errors.altitude}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <Controls.Input
+            label="Age"
+            name="age"
+            type="number"
+            onChange={handleInputChange}
+            value={values.age}
+            error={errors.age}
           />
         </Grid>
       </Grid>

@@ -4,7 +4,7 @@ import { contentStyles } from '../../components/Content'
 import useTable from '../../components/useTable'
 import * as predictCalc from '../../calc/predict'
 import ScenarioForm from './ScenarioForm'
-import * as scenarioService from '../../services/targetScenario'
+import * as scenarioService from '../../services/scenario'
 
 function RacePredictions(props) {
   const classes = contentStyles()
@@ -26,8 +26,20 @@ function RacePredictions(props) {
     recordsAfterPagingAndSorting
   } = useTable(records, headerCells, filterFn)
 
-  const updateScenario = (scenario) => {
-    scenarioService.updateScenario(scenario)
+  // Helper for merging objects
+  const definedProps = obj => Object.fromEntries(
+    Object.entries(obj).filter(([k, v]) => 
+      v !== undefined && v !== null && !isNaN(v)
+    )
+  )
+
+  const updateScenario = (newScenario) => {
+    // Merge previous scenario with updated (partial) new one
+    let scenario = { 
+      ...definedProps(scenarioService.getScenario()), 
+      ...definedProps(newScenario)
+    }
+    scenarioService.saveScenario(scenario)
     setScenario(scenario)
     setRecords(predictCalc.getRacePredictions(scenario))
   }

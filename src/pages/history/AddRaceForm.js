@@ -1,13 +1,14 @@
 import { Grid } from '@material-ui/core';
-import React, { useEffect } from 'react';
-import { Form, useForm } from '../../components/useForm';
-import Controls from '../../controls/Controls';
+import React, { useEffect } from 'react'
+import { Form, useForm } from '../../components/useForm'
+import Controls from '../../controls/Controls'
 import * as distanceCalc from '../../calc/distance'
+import * as profileService from '../../services/userProfile'
 import Race from '../../calc/Race'
 
 // Parsing and validation for the form fields. Regex should match blank
 // if value is optional. 
-// EYE - can we pass the whole thing to useForm and move validate there?
+const profile = profileService.getProfile()
 const FIELD = {
   'id': {
     pattern: RegExp(/(.*)/),
@@ -25,9 +26,14 @@ const FIELD = {
     initVal: '',
   },
   'altitude': {
-    pattern: RegExp(/\s*(\d+)\s*$/),
+    pattern: RegExp(/^\s*(\d+)\s*$/),
     help: 'Race altitude (ft)',
     initVal: 0,
+  },
+  'age': {
+    pattern: RegExp(/^\s*([1-9]\d*)\s*$/),
+    help: 'Age on race day',
+    initVal: new Date().getFullYear() - profile.birthYear,
   }
 }
 
@@ -89,6 +95,7 @@ function AddRaceForm(props) {
       id: values.id,
       distance: parseInt(values.distance), 
       altitude: parseInt(values.altitude), 
+      age: parseInt(values.age), 
       timeParts: timeParts,
     })
     return race
@@ -137,6 +144,14 @@ function AddRaceForm(props) {
             onChange={handleInputChange}
             value={values.altitude}
             error={errors.altitude}
+          />
+          <Controls.Input
+            label="Age"
+            name="age"
+            type="number"
+            onChange={handleInputChange}
+            value={values.age}
+            error={errors.age}
           />
           <div>
             <Controls.Button

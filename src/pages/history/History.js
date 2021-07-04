@@ -52,6 +52,7 @@ function History(props) {
     {id:'distance', label:'Distance', disableSort:true},
     {id:'time', label:'Time', disableSort:true},
     {id:'altitude', label:'Altitude', disableSort:true},
+    {id:'age', label:'Age', disableSort:true},
     {disableSort:true} 
   ]
 
@@ -96,6 +97,7 @@ function History(props) {
                   <TableCell> {item.distanceName} </TableCell>
                   <TableCell> {item.hhmmss} </TableCell>
                   <TableCell> {item.altitude} </TableCell>
+                  <TableCell> {item.age} </TableCell>
                   <TableCell>
                     <Controls.ActionButton color="primary" fontSize="small"
                       onClick={() => { openInPopup(item) }}
