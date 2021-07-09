@@ -1,3 +1,6 @@
+
+// https://github.com/Runalyze/age-grade/blob/master/src/Table/FemaleTable.php
+
 /**
  * Road standards are used for distances from 5.0 to 200.0 km.
  * Track standards are used for distances from 1500 to 3000m.
@@ -9,6 +12,7 @@
  * @see http://www.runscore.com/Alan/MaleTrackStdWMA2005.11.05.XLS
  * @version 2015.01.24
  */
+
 export const MALE_DATA =
 {
     // Distances in km

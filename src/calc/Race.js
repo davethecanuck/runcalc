@@ -192,9 +192,9 @@ export default class Race {
   predictTime(race) {
     // Set race time to expected value at sea level so we can calculate the 
     // altitude adjustment for that race
-    race.time = race.bestTime() * this.rawGradeFactor() 
-      * this.ageGradeFactor() / this.altitudeFactor()
-    const time = race.time * race.altitudeFactor() / race.ageGradeFactor()
+    race.time = race.bestTime() * this.rawGradeFactor() / this.altitudeFactor()
+    const time = race.time * race.altitudeFactor()
+      * this.ageGradeFactor() / race.ageGradeFactor()
 
     // Weight is ratio of race distances diminishing predictive value 
     // as distances get further apart. TBD - Also discount older results

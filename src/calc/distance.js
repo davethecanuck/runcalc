@@ -16,8 +16,9 @@ const DISTANCES = [
   { name: "20km", distance: 20000 },
   { name: "13.1 mile", distance: 21097 },
   { name: "26.2 mile", distance: 42195 },
-  { name: "50km", distance: 50000 }
 ]
+// Predictions aren't great at 50k
+//  { name: "50km", distance: 50000 }
 
 const SELECT_OPTIONS = DISTANCES.map((row) => {
   return { title: row.name, id: row.distance }

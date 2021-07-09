@@ -138,7 +138,7 @@ function AddRaceForm(props) {
             error={errors.hhmmss}
           />
           <Controls.Input
-            label="Altitude"
+            label="Altitude (ft)"
             name="altitude"
             type="number"
             onChange={handleInputChange}
@@ -153,18 +153,18 @@ function AddRaceForm(props) {
             value={values.age}
             error={errors.age}
           />
-          <div>
-            <Controls.Button
-              text="Save"
-              type="submit"
-            />
-            <Controls.Button
-              text="Reset"
-              color="default"
-              onClick={resetForm}
-            />
-          </div>
         </Grid>
+        <div>
+          <Controls.Button
+            text="Save"
+            type="submit"
+          />
+          <Controls.Button
+            text="Reset"
+            color="default"
+            onClick={resetForm}
+          />
+        </div>
       </Grid>
     </Form>
   );
