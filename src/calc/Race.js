@@ -1,9 +1,10 @@
 import * as distanceService from './distance'
 import * as profileService from '../services/userProfile'
+import * as ageGrade from './ageGrade'
 
 // Encapsulate a race so we can infer reasonable times and calculate
 // things like pace and age grade
-export default  class Race {
+export default class Race {
   constructor(race = {}) {
     Object.assign(this, race);
 
@@ -168,12 +169,32 @@ export default  class Race {
     return this.time / this.bestTime()
   }
 
+  // Age grade factor for this race
+  ageGradeFactor() {
+    // If gender=other, use average of male and female age grades
+    const profile = profileService.getProfile()
+
+    if (profile.gender === 'female') {
+      return ageGrade.getFemaleAgeGradeFactor(this.age, this.distance)
+    }
+    else if (profile.gender === 'male') {
+      return ageGrade.getMaleAgeGradeFactor(this.age, this.distance)
+    }
+    else {
+      return (
+        ageGrade.getFemaleAgeGradeFactor(this.age, this.distance)
+        + ageGrade.getMaleAgeGradeFactor(this.age, this.distance)
+      ) / 2.0
+    }
+  }
+
   // Use this race to predict the time for another race. 
   predictTime(race) {
     // Set race time to expected value at sea level so we can calculate the 
     // altitude adjustment for that race
-    race.time = race.bestTime() * this.rawGradeFactor() / this.altitudeFactor()
-    const time = race.time * race.altitudeFactor()
+    race.time = race.bestTime() * this.rawGradeFactor() 
+      * this.ageGradeFactor() / this.altitudeFactor()
+    const time = race.time * race.altitudeFactor() / race.ageGradeFactor()
 
     // Weight is ratio of race distances diminishing predictive value 
     // as distances get further apart. TBD - Also discount older results

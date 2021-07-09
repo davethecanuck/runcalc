@@ -8,9 +8,23 @@ function UserProfile(props) {
   const classes = contentStyles()
   const [profile, setProfile] = useState(profileService.getProfile())
 
-  const updateProfile = (profile) => {
-    profileService.updateProfile(profile)
-    setProfile(profile)
+  // Helper for merging objects
+  const definedProps = (obj) => Object.fromEntries(
+    Object.entries(obj).filter(([k, v]) => 
+        (k === 'birthYear' && v !== undefined && v !== null && !isNaN(v)) 
+        || 
+        (k === 'gender' && v !== undefined && v !== null)
+    )
+  )
+
+  const updateProfile = (newProfile) => {
+    // Merge previous profile with updated (partial) new one
+    let merged = { 
+      ...definedProps(profileService.getProfile()), 
+      ...definedProps(newProfile),
+    }
+    profileService.saveProfile(merged)
+    setProfile(merged)
   }
 
   return (

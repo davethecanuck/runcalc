@@ -10,11 +10,23 @@ function getYearPattern(dt) {
   return new RegExp(patternStr);
 }
 
+const DEFAULT_AGE = 25
+
 const FIELD = {
   'birthYear': {
     pattern: getYearPattern(new Date()),
     help: 'Enter a valid birth year',
-    initVal: new Date().getFullYear() - 25,
+    initVal: new Date().getFullYear() - DEFAULT_AGE,
+  },
+  'gender': {
+    pattern: new RegExp(/^(.*)$/),
+    help: 'Your gender',
+    initVal: 'other',
+    items: [
+      { 'id': 'male', 'title': 'Male'},
+      { 'id': 'female', 'title': 'Female'},
+      { 'id': 'other', 'title': 'Other'} 
+    ],
   }
 }
 
@@ -44,7 +56,8 @@ function ProfileForm(props) {
     const isValid = Object.values(temp).every(x => x === "")
     if (isValid) {
       updateProfile({ 
-        birthYear: parseInt(fieldValues.birthYear) 
+        birthYear: parseInt(fieldValues.birthYear),
+        gender: fieldValues.gender, 
       })
     }
 
@@ -83,14 +96,21 @@ function ProfileForm(props) {
   return (
     <Form onSubmit={handleSubmit}>
       <Grid container>
-        <Grid item xs={4}>
+        <Grid item xs={12}>
           <Controls.Input
             label="Birth Year"
             name="birthYear"
             type="number"
-            onChange={handleInputChange}
             value={values.birthYear}
             error={errors.birthYear}
+            onChange={handleInputChange}
+          />
+          <Controls.RadioGroup
+            label="Gender"
+            name="gender"
+            value={values.gender}
+            items={FIELD.gender.items}
+            onChange={handleInputChange}
           />
         </Grid>
       </Grid>

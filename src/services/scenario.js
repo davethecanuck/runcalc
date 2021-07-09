@@ -8,7 +8,7 @@ const KEYS = {
 }
 
 const DEFAULT_ALTITUDE = 0
-const DEFAULT_AGE = 25
+const MIN_AGE = 5
 
 export function getScenario() {
   let scenario = JSON.parse(localStorage.getItem(KEYS.scenario) || "{}")
@@ -22,8 +22,8 @@ export function getScenario() {
     // Pull age from user profile (defaults to 25)
     const profile = profileService.getProfile()
     scenario[KEYS.age] = new Date().getFullYear() - profile.birthYear
-    if (scenario[KEYS.age] < 1) {
-      scenario[KEYS.age] = DEFAULT_AGE
+    if (scenario[KEYS.age] < MIN_AGE) {
+      scenario[KEYS.age] = MIN_AGE
     }
     didUpdate = true
   }

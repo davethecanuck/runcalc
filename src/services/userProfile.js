@@ -1,18 +1,30 @@
 const KEYS = {
   profile: "profile",
+  birthYear: "birthYear",
+  gender: "gender",
 }
+
+const DEFAULT_AGE = 25
 
 export function getProfile() {
-  let profile = localStorage.getItem(KEYS.profile)
-  if (profile == null) {
-    profile = JSON.stringify({ "birthYear": new Date().getFullYear() - 25 })
-    localStorage.setItem(KEYS.profile, profile)
+  let profile = JSON.parse(localStorage.getItem(KEYS.profile) || "{}")
+  let didUpdate = false
+
+  if (!profile[KEYS.birthYear]) {
+    profile[KEYS.birthYear] = new Date().getFullYear() - DEFAULT_AGE 
+    didUpdate = true
   }
-  return JSON.parse(profile)
+  if (!profile[KEYS.gender]) {
+    profile[KEYS.gender] = 'other'
+    didUpdate = true
+  }
+
+  if (didUpdate) {
+    saveProfile(profile)
+  }
+  return profile
 }
 
-export function updateProfile(newProfile) {
-  let profile = getProfile()
-  profile = {...newProfile}
+export function saveProfile(profile) {
   localStorage.setItem(KEYS.profile, JSON.stringify(profile))
 }

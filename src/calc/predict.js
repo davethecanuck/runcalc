@@ -16,7 +16,8 @@ export function getRacePredictions(scenario) {
       const [time, weight] = pastRace.predictTime(
         new Race({
           distance: target.distance, 
-          altitude: scenario.altitude
+          altitude: scenario.altitude,
+          age: scenario.age,
         })
       )
       totalTime += time * weight
@@ -29,6 +30,7 @@ export function getRacePredictions(scenario) {
         time: totalTime/totalWeight,
         distance: target.distance,
         altitude: scenario.altitude,
+        age: scenario.age,
       })
       targetRaces.push(targetRace)
     }
