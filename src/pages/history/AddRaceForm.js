@@ -31,7 +31,7 @@ const FIELD = {
     initVal: 0,
   },
   'age': {
-    pattern: RegExp(/^\s*([1-9]\d*)\s*$/),
+    pattern: RegExp(/^\s*([1-9]\d{0,1})\s*$/),
     help: 'Age on race day',
     initVal: new Date().getFullYear() - profile.birthYear,
   }
