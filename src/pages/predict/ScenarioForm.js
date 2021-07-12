@@ -9,16 +9,26 @@ import * as scenarioService from '../../services/scenario'
 const initScenario = scenarioService.getScenario()
 
 const FIELD = {
-  'altitude': {
-    pattern: RegExp(/^\s*(\d+)\s*$/),
-    help: 'Race altitude (ft)',
-    initVal: initScenario.altitude,
-  }, 
   'age': {
     pattern: RegExp(/^\s*([1-9]\d{0,1})\s*$/),
     help: 'Age on race day',
     initVal: initScenario.age,
-  }
+  },
+  'altitude': {
+    pattern: RegExp(/^\s*(\d+)\s*$/),
+    help: 'Race start altitude (ft)',
+    initVal: initScenario.altitude,
+  }, 
+  'elevGain': {
+    pattern: RegExp(/^\s*(\d+)\s*$/),
+    help: 'Elevation gain (ft)',
+    initVal: initScenario.elevGain,
+  }, 
+  'elevLoss': {
+    pattern: RegExp(/^\s*(\d+)\s*$/),
+    help: 'Elevation loss (ft)',
+    initVal: initScenario.elevLoss,
+  }, 
 }
 
 // Initialize values with stored value if possible
@@ -29,7 +39,7 @@ Object.keys(FIELD).forEach((key) => {
 
 function ScenarioForm(props) {
   // Get the initial scenario and the updater
-  const { updateScenario, scenario } = props;
+  const { updateScenario, scenario, isDesktop } = props;
 
   // Validate is called on each key stroke for the current field 
   // being edited. For onSubmit, ALL of the fields are included
@@ -48,8 +58,10 @@ function ScenarioForm(props) {
     const isValid = Object.values(temp).every(x => x === "")
     if (isValid) {
       updateScenario({ 
+        age: parseInt(fieldValues.age),
         altitude: parseInt(fieldValues.altitude),
-        age: parseInt(fieldValues.age) 
+        elevGain: parseInt(fieldValues.elevGain),
+        elevLoss: parseInt(fieldValues.elevLoss),
       })
     }
 
@@ -88,7 +100,17 @@ function ScenarioForm(props) {
   return (
     <Form onSubmit={handleSubmit}>
       <Grid container>
-        <Grid item xs={4}>
+        <Grid item xs={isDesktop ? 12 : 5}>
+          <Controls.Input
+            label="Age"
+            name="age"
+            type="number"
+            onChange={handleInputChange}
+            value={values.age}
+            error={errors.age}
+          />
+        </Grid>
+        <Grid item xs={isDesktop ? 12 : 5}>
           <Controls.Input
             label="Altitude"
             name="altitude"
@@ -98,14 +120,24 @@ function ScenarioForm(props) {
             error={errors.altitude}
           />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={isDesktop ? 12 : 5}>
           <Controls.Input
-            label="Age"
-            name="age"
+            label="Elev. Gain"
+            name="elevGain"
             type="number"
             onChange={handleInputChange}
-            value={values.age}
-            error={errors.age}
+            value={values.elevGain}
+            error={errors.elevGain}
+          />
+        </Grid>
+        <Grid item xs={isDesktop ? 12 : 5}>
+          <Controls.Input
+            label="Elev. Loss"
+            name="elevLoss"
+            type="number"
+            onChange={handleInputChange}
+            value={values.elevLoss}
+            error={errors.elevLoss}
           />
         </Grid>
       </Grid>

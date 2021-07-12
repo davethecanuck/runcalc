@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { Paper, TableBody, TableCell, TableRow, Typography } from '@material-ui/core';
+import React, { useState, useEffect } from 'react'
+import { Paper, TableBody, TableCell, TableRow, Typography, Grid } 
+  from '@material-ui/core';
 import { contentStyles } from '../../components/Content'
 import useTable from '../../components/useTable'
 import * as predictCalc from '../../calc/predict'
@@ -44,37 +45,56 @@ function RacePredictions(props) {
     setRecords(predictCalc.getRacePredictions(scenario))
   }
 
-  // Render
+  // Hanndle desktop (wide) vs mobile screen size
+  const DESKTOP_SIZE = 700
+  const [isDesktop, setDesktop] = useState(window.innerWidth > DESKTOP_SIZE);
+
+  const updateMedia = () => {
+    setDesktop(window.innerWidth > DESKTOP_SIZE)
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", updateMedia);
+    return () => window.removeEventListener("resize", updateMedia);
+  })
+
+  // Render results
   return (
     <div>
-      <Paper className={classes.pageContentHead}>
-        <Typography variant="h6" component="div" style={{flexGrow: 1}}>
-          Scenario
-        </Typography>
-        <ScenarioForm 
-          updateScenario={updateScenario}
-          scenario={scenario}
-        />
-      </Paper>
-
-      <Paper className={classes.pageContentMain}>
-        <TblContainer>
-          <TblHead />
-          <TableBody>
-          {
-            records.map(
-              (item) => (
-                <TableRow key={item.id}>
-                  <TableCell> {item.distanceName} </TableCell>
-                  <TableCell> {item.hhmmss} </TableCell>
-                  <TableCell> {item.getPaceString()} </TableCell>
-                </TableRow>
-              )
-            )
-          }
-          </TableBody>
-        </TblContainer>
-      </Paper>
+      <Grid container>
+        <Grid item xs={isDesktop ? 4 : 12}>
+          <Paper className={classes.pageContentHead}>
+            <Typography variant="h6" component="div" style={{flexGrow: 1}}>
+              Scenario
+            </Typography>
+            <ScenarioForm 
+              updateScenario={updateScenario}
+              scenario={scenario}
+              isDesktop={isDesktop}
+            />
+          </Paper>
+        </Grid>
+        <Grid item xs={isDesktop ? 8 : 12}>
+          <Paper className={classes.pageContentMain}>
+            <TblContainer>
+              <TblHead />
+              <TableBody>
+              {
+                records.map(
+                  (item) => (
+                    <TableRow key={item.id}>
+                      <TableCell> {item.distanceName} </TableCell>
+                      <TableCell> {item.hhmmss} </TableCell>
+                      <TableCell> {item.getPaceString()} </TableCell>
+                    </TableRow>
+                  )
+                )
+              }
+              </TableBody>
+            </TblContainer>
+          </Paper>
+        </Grid>
+      </Grid>
     </div>
   )
 }

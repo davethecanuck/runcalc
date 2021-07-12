@@ -30,6 +30,16 @@ const FIELD = {
     help: 'Race altitude (ft)',
     initVal: 0,
   },
+  'elevGain': {
+    pattern: RegExp(/^\s*(\d+)\s*$/),
+    help: 'Elev. gain (ft)',
+    initVal: 0,
+  },
+  'elevLoss': {
+    pattern: RegExp(/^\s*(\d+)\s*$/),
+    help: 'Elev. loss (ft)',
+    initVal: 0,
+  },
   'age': {
     pattern: RegExp(/^\s*([1-9]\d{0,1})\s*$/),
     help: 'Age on race day',
@@ -94,8 +104,10 @@ function AddRaceForm(props) {
     let race = new Race({
       id: values.id,
       distance: parseInt(values.distance), 
-      altitude: parseInt(values.altitude), 
       age: parseInt(values.age), 
+      altitude: parseInt(values.altitude), 
+      elevGain: parseInt(values.elevGain), 
+      elevLoss: parseInt(values.elevLoss), 
       timeParts: timeParts,
     })
     return race
@@ -131,6 +143,14 @@ function AddRaceForm(props) {
             error={errors.distance}
           />
           <Controls.Input
+            label="Age"
+            name="age"
+            type="number"
+            onChange={handleInputChange}
+            value={values.age}
+            error={errors.age}
+          />
+          <Controls.Input
             label="Finish Time"
             name="hhmmss"
             onChange={handleInputChange}
@@ -146,12 +166,20 @@ function AddRaceForm(props) {
             error={errors.altitude}
           />
           <Controls.Input
-            label="Age"
-            name="age"
+            label="Elev. Gain (ft)"
+            name="elevGain"
             type="number"
             onChange={handleInputChange}
-            value={values.age}
-            error={errors.age}
+            value={values.elevGain}
+            error={errors.elevGain}
+          />
+          <Controls.Input
+            label="Elev. Loss (ft)"
+            name="elevLoss"
+            type="number"
+            onChange={handleInputChange}
+            value={values.elevLoss}
+            error={errors.elevLoss}
           />
         </Grid>
         <div>

@@ -5,9 +5,13 @@ const KEYS = {
   scenario: "scenario",
   altitude: "altitude",
   age: "age",
+  elevGain: "elevGain",
+  elevLoss: "elevLoss",
 }
 
 const DEFAULT_ALTITUDE = 0
+const DEFAULT_ELEV_GAIN = 0
+const DEFAULT_ELEV_LOSS = 0
 const MIN_AGE = 5
 
 export function getScenario() {
@@ -16,6 +20,14 @@ export function getScenario() {
 
   if (!scenario[KEYS.altitude]) {
     scenario[KEYS.altitude] = DEFAULT_ALTITUDE
+    didUpdate = true
+  }
+  if (!scenario[KEYS.elevGain]) {
+    scenario[KEYS.elevGain] = DEFAULT_ELEV_GAIN
+    didUpdate = true
+  }
+  if (!scenario[KEYS.elevLoss]) {
+    scenario[KEYS.elevLoss] = DEFAULT_ELEV_LOSS
     didUpdate = true
   }
   if (!scenario[KEYS.age]) {

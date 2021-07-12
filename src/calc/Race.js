@@ -15,6 +15,8 @@ export default class Race {
     this.timeParts    // int[3] = hh,mm,ss
     this.hhmmss       // "hh:mm:ss" string
     this.altitude     // int
+    this.elevGain     // int
+    this.elevLoss     // int
     this.age          // int
     this.id           // unique id string
     */
@@ -31,6 +33,13 @@ export default class Race {
     if (!this.altitude) {
       this.altitude = 0
     }
+    if (!this.elevGain) {
+      this.elevGain = 0
+    }
+    if (!this.elevLoss) {
+      this.elevLoss = 0
+    }
+
     const profile = profileService.getProfile()
     if (!this.age) {
       this.age = new Date().getFullYear() - profile.birthYear
@@ -70,6 +79,12 @@ export default class Race {
         this.hhmmss = this.getHHMMSS()
       }
     }
+  }
+
+  // Return the average altitude for the race (starting altitude
+  // plus average of elevation gain and loss)
+  getAvgAltitude() {
+    return this.altitude + (this.elevGain - this.elevLoss) / 2.0
   }
 
   // Return time from object or timeParts 
@@ -157,10 +172,19 @@ export default class Race {
     // rawGradeFactor (based on male world record) needs to be adjusted down.
     // D1 10km reference time is  33:30, and male record is 26:11 (1.28:1 ratio)
     let adjDistance = (this.distance - 790) * this.rawGradeFactor() / 1.28
-    let regInput = (this.altitude**1.85 * adjDistance**0.22) / 100000000
+    let regInput = (this.getAvgAltitude()**1.85 * adjDistance**0.22) / 100000000
     
     // 1st-degree (linear) regression of the 'regInput' formula
     return 1 + 0.0595*regInput
+  }
+
+  // Get adjustment for elevation gain and loss. 
+  // Based on Stryd formula for power: 
+  // https://blog.stryd.com/2020/01/10/how-to-calculate-your-race-time-from-your-target-power/
+  // and research by James Milledge, summarized by:
+  // Timothy Noakes, Lore of Running (4th Ed., pp. 574-580)
+  elevationFactor() {
+    return 1 + (1.45 * this.elevGain - 0.797 * this.elevLoss) / this.distance
   }
 
   // Essentially a raw age-grade type score against the reference
@@ -192,8 +216,9 @@ export default class Race {
   predictTime(race) {
     // Set race time to expected value at sea level so we can calculate the 
     // altitude adjustment for that race
-    race.time = race.bestTime() * this.rawGradeFactor() / this.altitudeFactor()
-    const time = race.time * race.altitudeFactor()
+    race.time = race.bestTime() * this.rawGradeFactor() / 
+      this.altitudeFactor() / this.elevationFactor()
+    const time = race.time * race.altitudeFactor() * race.elevationFactor()
       * this.ageGradeFactor() / race.ageGradeFactor()
 
     // Weight is ratio of race distances diminishing predictive value 
