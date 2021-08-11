@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import {createMuiTheme, CssBaseline, ThemeProvider, withStyles} 
   from '@material-ui/core'
 import { PermIdentityOutlined, HistoryOutlined, DirectionsRunOutlined, 
-  ShowChartOutlined, 
   HelpOutlineRounded} from '@material-ui/icons'
 
 import Content from '../components/Content'

@@ -26,7 +26,7 @@ const FIELD = {
   }, 
   'elevLoss': {
     pattern: RegExp(/^\s*(\d+)\s*$/),
-    help: 'Elevation loss (ft)',
+    help: 'Elev. loss (positive ft)',
     initVal: initScenario.elevLoss,
   }, 
 }
@@ -58,10 +58,10 @@ function ScenarioForm(props) {
     const isValid = Object.values(temp).every(x => x === "")
     if (isValid) {
       updateScenario({ 
-        age: parseInt(fieldValues.age),
-        altitude: parseInt(fieldValues.altitude),
-        elevGain: parseInt(fieldValues.elevGain),
-        elevLoss: parseInt(fieldValues.elevLoss),
+        age: parseInt(fieldValues.age, 10),
+        altitude: parseInt(fieldValues.altitude, 10),
+        elevGain: parseInt(fieldValues.elevGain, 10),
+        elevLoss: parseInt(fieldValues.elevLoss, 10),
       })
     }
 
@@ -100,7 +100,7 @@ function ScenarioForm(props) {
   return (
     <Form onSubmit={handleSubmit}>
       <Grid container>
-        <Grid item xs={isDesktop ? 12 : 5}>
+        <Grid item xs={isDesktop ? 12 : 6}>
           <Controls.Input
             label="Age"
             name="age"
@@ -110,7 +110,7 @@ function ScenarioForm(props) {
             error={errors.age}
           />
         </Grid>
-        <Grid item xs={isDesktop ? 12 : 5}>
+        <Grid item xs={isDesktop ? 12 : 6}>
           <Controls.Input
             label="Altitude"
             name="altitude"
@@ -120,7 +120,7 @@ function ScenarioForm(props) {
             error={errors.altitude}
           />
         </Grid>
-        <Grid item xs={isDesktop ? 12 : 5}>
+        <Grid item xs={isDesktop ? 12 : 6}>
           <Controls.Input
             label="Elev. Gain"
             name="elevGain"
@@ -130,7 +130,7 @@ function ScenarioForm(props) {
             error={errors.elevGain}
           />
         </Grid>
-        <Grid item xs={isDesktop ? 12 : 5}>
+        <Grid item xs={isDesktop ? 12 : 6}>
           <Controls.Input
             label="Elev. Loss"
             name="elevLoss"

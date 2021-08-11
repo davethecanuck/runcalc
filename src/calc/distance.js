@@ -14,8 +14,8 @@ const DISTANCES = [
   { name: "10km", distance: 10000 },
   { name: "15km", distance: 15000 },
   { name: "20km", distance: 20000 },
-  { name: "13.1 mile", distance: 21097 },
-  { name: "26.2 mile", distance: 42195 },
+  { name: "13.1 mi", distance: 21097 },
+  { name: "26.2 mi", distance: 42195 },
 ]
 // Predictions aren't great at 50k
 //  { name: "50km", distance: 50000 }
@@ -25,14 +25,12 @@ const SELECT_OPTIONS = DISTANCES.map((row) => {
 })
 
 const NAME_BY_DISTANCE = DISTANCES.reduce((map, obj) => (
-    map[obj.distance] = obj.name, map
-  ), {}
-)
+  map[obj.distance] = obj.name, map 
+), {})
 
 const DISTANCE_BY_NAME = DISTANCES.reduce((map, obj) => (
-    map[obj.name] = obj.distance, map
-  ), {}
-)
+  map[obj.name] = obj.distance, map
+), {})
 
 export function getName(distance) {
   return NAME_BY_DISTANCE[distance]

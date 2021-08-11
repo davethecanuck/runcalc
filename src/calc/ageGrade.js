@@ -2,7 +2,6 @@ import {FEMALE_DATA} from './femaleAgeGrade'
 import {MALE_DATA} from './maleAgeGrade'
 
 // Minimum age in age grade tables
-// EYE - verify!!
 const MIN_AGE = 5;
 
 export function getFemaleAgeGradeFactor(age, meters) {

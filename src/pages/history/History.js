@@ -1,6 +1,6 @@
 import { Fab, Paper, TableBody, TableCell, TableRow } from '@material-ui/core';
 import { AddOutlined, EditOutlined } from '@material-ui/icons';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Popup from '../../components/Popup'
 import Notification from '../../components/Notification'
 import AddRaceForm from './AddRaceForm';
@@ -74,6 +74,19 @@ function History(props) {
     })
   }
 
+  // Hanndle desktop (wide) vs mobile screen size
+  const DESKTOP_SIZE = 400  // Allow 2x2 inputs with smaller size
+  const [isDesktop, setDesktop] = useState(window.innerWidth > DESKTOP_SIZE);
+
+  const updateMedia = () => {
+    setDesktop(window.innerWidth > DESKTOP_SIZE)
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", updateMedia);
+    return () => window.removeEventListener("resize", updateMedia);
+  })
+
   return (
     <div>
       <Fab variant="extended" aria-label="Add Race" color="secondary"
@@ -125,6 +138,7 @@ function History(props) {
         <AddRaceForm 
           addOrEdit={addOrEdit}
           recordForEdit={recordForEdit}
+          isDesktop={isDesktop}
         />
       </Popup>
       <Notification

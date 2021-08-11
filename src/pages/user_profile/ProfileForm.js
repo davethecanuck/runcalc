@@ -56,7 +56,7 @@ function ProfileForm(props) {
     const isValid = Object.values(temp).every(x => x === "")
     if (isValid) {
       updateProfile({ 
-        birthYear: parseInt(fieldValues.birthYear),
+        birthYear: parseInt(fieldValues.birthYear, 10),
         gender: fieldValues.gender, 
       })
     }

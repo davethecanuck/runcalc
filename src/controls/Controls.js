@@ -4,6 +4,8 @@ import Select from './Select';
 import Checkbox from './Checkbox';
 import Button from './Button';
 import ActionButton from './ActionButton';
+import InputSlider from './InputSlider';
+import Slider from './Slider';
 
 // This exists to create a namespace separate from the equivalent
 // MUI components. 
@@ -14,6 +16,8 @@ const Controls = {
     Checkbox,
     Button,
     ActionButton,
+    InputSlider,
+    Slider,
 }
 
 export default Controls;

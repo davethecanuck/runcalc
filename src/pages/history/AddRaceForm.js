@@ -37,7 +37,7 @@ const FIELD = {
   },
   'elevLoss': {
     pattern: RegExp(/^\s*(\d+)\s*$/),
-    help: 'Elev. loss (ft)',
+    help: 'Elev. loss (positive ft)',
     initVal: 0,
   },
   'age': {
@@ -54,7 +54,7 @@ Object.keys(FIELD).forEach((key) => {
 })
 
 function AddRaceForm(props) {
-  const { addOrEdit, recordForEdit } = props;
+  const { addOrEdit, recordForEdit, isDesktop } = props;
 
   // Validate is called on each key stroke for the current field 
   // being edited. For onSubmit, ALL of the fields are included
@@ -92,22 +92,22 @@ function AddRaceForm(props) {
   const parseFormToRace = () => {
     let parsedTime = FIELD.hhmmss.pattern.exec(values.hhmmss);
     let timeParts = [];
-    timeParts.push(parseInt(parsedTime[1]));
-    timeParts.push(parseInt(parsedTime[2]));
+    timeParts.push(parseInt(parsedTime[1], 10));
+    timeParts.push(parseInt(parsedTime[2], 10));
 
     // Optional last part (ss or mm) is in offset 4 of regex
     if (parsedTime[4] != null) {
-      timeParts.push(parseInt(parsedTime[4]));
+      timeParts.push(parseInt(parsedTime[4], 10));
     }
 
     // Finally define the race object
     let race = new Race({
       id: values.id,
-      distance: parseInt(values.distance), 
-      age: parseInt(values.age), 
-      altitude: parseInt(values.altitude), 
-      elevGain: parseInt(values.elevGain), 
-      elevLoss: parseInt(values.elevLoss), 
+      distance: parseInt(values.distance, 10), 
+      age: parseInt(values.age, 10), 
+      altitude: parseInt(values.altitude, 10), 
+      elevGain: parseInt(values.elevGain, 10), 
+      elevLoss: parseInt(values.elevLoss, 10), 
       timeParts: timeParts,
     })
     return race
@@ -133,7 +133,7 @@ function AddRaceForm(props) {
   return (
     <Form onSubmit={handleSubmit}>
       <Grid container>
-        <Grid item xs={12}>
+        <Grid item xs={isDesktop ? 4 : 6}>
           <Controls.Select
             label="Distance"
             name="distance"
@@ -142,6 +142,17 @@ function AddRaceForm(props) {
             options={distanceCalc.getSelectOptions()}
             error={errors.distance}
           />
+        </Grid>
+        <Grid item xs={isDesktop ? 4 : 6}>
+          <Controls.Input
+            label="Time"
+            name="hhmmss"
+            onChange={handleInputChange}
+            value={values.hhmmss}
+            error={errors.hhmmss}
+          />
+        </Grid>
+        <Grid item xs={isDesktop ? 4 : 6}>
           <Controls.Input
             label="Age"
             name="age"
@@ -150,13 +161,8 @@ function AddRaceForm(props) {
             value={values.age}
             error={errors.age}
           />
-          <Controls.Input
-            label="Finish Time"
-            name="hhmmss"
-            onChange={handleInputChange}
-            value={values.hhmmss}
-            error={errors.hhmmss}
-          />
+        </Grid>
+        <Grid item xs={isDesktop ? 4 : 6}>
           <Controls.Input
             label="Altitude (ft)"
             name="altitude"
@@ -165,6 +171,22 @@ function AddRaceForm(props) {
             value={values.altitude}
             error={errors.altitude}
           />
+          {/*
+          <Controls.Slider
+            label="Altitude (ft)"
+            name="altitude"
+            type="number"
+            step={50}
+            max={10000}
+            orientation="vertical"
+            valueLabelDisplay="on"
+            onChange={handleInputChange}
+            value={values.altitude}
+            error={errors.altitude}
+          />
+          */}
+        </Grid>
+        <Grid item xs={isDesktop ? 4 : 6}>
           <Controls.Input
             label="Elev. Gain (ft)"
             name="elevGain"
@@ -173,6 +195,8 @@ function AddRaceForm(props) {
             value={values.elevGain}
             error={errors.elevGain}
           />
+        </Grid>
+        <Grid item xs={isDesktop ? 4 : 6}>
           <Controls.Input
             label="Elev. Loss (ft)"
             name="elevLoss"
