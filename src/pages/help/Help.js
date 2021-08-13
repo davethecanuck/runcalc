@@ -41,7 +41,7 @@ function Help(props) {
         </p>
         <h2> How does this work? </h2> 
         <p> 
-          Though the calculator (currently) uses American units for height/pace/etc, 
+          Though the calculator (currently) uses American units for altitude/pace/etc, 
           the calculations on the back-end are all done in metric. For the following, 
           assume all distances/elevations/altitudes are in meters, energy is in Joules, 
           power is in Watts, and masses are in kilograms.
@@ -63,14 +63,14 @@ function Help(props) {
         <p>
           A regression of 
           <a href='https://www.worldathletics.org/records/by-category/world-records'
-          target='_blank' rel='noopener noreferrer'> world records </a> by men and women for all major events
-          from 800m to marathon was done to create a formula for predicting 
-          race times (t) for a given distance (d).
+          target='_blank' rel='noopener noreferrer'> world records </a> by men and 
+          women for all major events from 800m to marathon was done to create a 
+          formula for predicting race times (t) for a given distance (d).
         </p>
 
-        <p><span>
-          t =-19.964 + 0.152&times;d + 9.098E-7&times;d&sup2; - 9.556E-12&times;d&sup3;
-        </span></p>
+        <p><pre>
+          t =-19.964 + 0.152&#8901;d + 9.098E-7&#8901;d&sup2; - 9.556E-12&#8901;d&sup3;
+        </pre></p>
 
         <p>
           This formula is pretty accurate for predicting men's world records
@@ -83,8 +83,9 @@ function Help(props) {
         <h3> Altitude Factor </h3>
         <p>
           A similar regression was done for altitude adjustements based on raw
-          data from the <a href='https://www.ustfccca.org/assets/ncaa-info/2009-outdoor-alt-adjust.pdf'
-          target='_blank' rel='noopener noreferrer'> 
+          data from the <a 
+            href='https://www.ustfccca.org/assets/ncaa-info/2009-outdoor-alt-adjust.pdf'
+            target='_blank' rel='noopener noreferrer'> 
           NCAA altitude adjustment tables
           </a>. 
           The formula has been tweaked to account for physiological effects 
@@ -121,9 +122,9 @@ function Help(props) {
           to this regression. The end result is a function which returns an altitude 
           factor (f) as a function of the distance (d) and altitude (a). 
         </p>
-        <p><span>
-          f = 1 + 0.0595 &times; (d^1.85 &times; (a^0.22)/10^8)
-        </span></p>
+        <p><pre>
+          f = 1 + 0.0595&#8901;(d^1.85&#8901;(a^0.22)/10^8)
+        </pre></p>
         <p>
           This factor is multiplied by the ideal time at sea level to predict your time at 
           a given altitude. 
@@ -162,9 +163,9 @@ function Help(props) {
           power and distance, but I converted the fomula to calculate energy as a 
           function of distance. 
           </p>
-          <p><span>
-            e = 1.04 &times; d &times; m
-          </span> </p>
+          <p><pre>
+            e = 1.04&#8901;d&#8901;m
+          </pre> </p>
           <p>
           The takeaway from this is that you can generally assume a constant energy expenditure
           for a given runner of a given mass on a given flat race regardless of pace. 
@@ -177,9 +178,10 @@ function Help(props) {
           your descent, and kinetic energy is translated into elastic potential energy 
           in your tendons/muscles, and also wasted as heat. The more elastic your tendons
           are (and perhaps the better match of your cadence to the natural rebound frequency
-          of your tendons) the less energy will be lost to heat. Likewise, the less vertical 
-          oscillation in your stride, the less downward momentum will need to be halted in 
-          the landing phase, and the less energy will be lost.
+          of your tendons) the more kinetic energy you will recover, and the less energy 
+          will be lost to heat. Likewise, the less vertical oscillation there is in your 
+          stride, the less downward momentum will need to be halted in the landing 
+          phase, and the less energy will be lost.
         </p>
 
         <p>
@@ -195,9 +197,9 @@ function Help(props) {
           Energy (e) expended to gain elevation is simple to calculate via Newtonian physics as
           a function of your mass (m) and the elevation gain (v&#8330;). 
         </p>
-        <p><span>
-          e = 9.8 &times; m &times; v&#8330;
-        </span>
+        <p><pre>
+          e = 9.8&#8901;m&#8901;v&#8330;
+        </pre>
         </p>
         <p>
           Energy gained back from elevation loss (running downhill) is also based on the same equation,
@@ -223,17 +225,39 @@ function Help(props) {
         </p>
 
         <p>
-          Putting it all together, the total power you put out over a race of a given distance (d)
-          will be broken down into the power to move you forward at a given pace plus the power to 
-          gain elevation (v&#8330;) minus the power gained back while losing elevation (v&#8331;). 
-          The total power will be equal to your max power for a race of equivalent time duration 
-          on the flat.  Solving for time (t) we discover that mass cancels out of the equation. 
-          Converting this to a factor (f) to be multiplied against the
-          time predicted for a race on the flat, we get:
+          Putting it all together, the total energy (e) you expend over a race of a given 
+          distance (d) will be broken down into the energy to move you over the distance 
+          on the flat (e&#8320;), plus the energy to gain elevation (e&#8330;) minus the energy 
+          gained back while losing elevation (e&#8331;). 
         </p>
-        <p><span>
-          f = 1 + (4.71 &times; v&#8330; - 2.59 &times; v&#8331;) / d 
-        </span></p>
+        <pre>
+        <p>
+          e = e&#8320; + e&#8330; - e&#8331;
+        </p>
+        <p>
+          e = 1.04&#8901;d&#8901;m + 9.8&#8901;m&#8901;v&#8330; 
+              - 0.55&#8901;9.8&#8901;m&#8901;v&#8331;
+        </p>
+        </pre>
+        <p>
+          The total power (energy / time) will be equal to your max power for a race of 
+          equivalent time duration (t&#8320;) on the flat.  
+        </p>
+        <pre>
+          p = e&#8320;/t&#8320; = 
+            (1.04&#8901;d&#8901;m + 9.8&#8901;m&#8901;v&#8330; 
+             - 0.55&#8901;9.8&#8901;m&#8901;v&#8331;) / t
+        </pre>
+
+        <p>
+          Solving for the ratio of predicted time (t) to time on the flat (t&#8320;) 
+          gives us our elevation change factor (f).
+        </p>
+        <pre>
+          <p>
+          f = t / t&#8320; = 1 + (4.71&#8901;v&#8330; - 2.59&#8901;v&#8331;) / d 
+          </p>
+        </pre>
 
         <h3> Power and Efficiency </h3>
         <p>

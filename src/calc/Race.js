@@ -84,7 +84,7 @@ export default class Race {
   // Return the average altitude for the race (starting altitude
   // plus average of elevation gain and loss)
   getAvgAltitude() {
-    return this.altitude + (this.elevGain - this.elevLoss) / 2.0
+    return Math.max(0, this.altitude + (this.elevGain - this.elevLoss) / 2.0)
   }
 
   // Return time from object or timeParts 
@@ -184,7 +184,9 @@ export default class Race {
   // and research by James Milledge, summarized by:
   // Timothy Noakes, Lore of Running (4th Ed., pp. 574-580)
   elevationFactor() {
-    return 1 + (1.45 * this.elevGain - 0.797 * this.elevLoss) / this.distance
+    // TBD - changing formula to be energy based
+    //return 1 + (1.45 * this.elevGain - 0.797 * this.elevLoss) / this.distance
+    return 1 + (2.9 * this.elevGain - 1.6 * this.elevLoss) / this.distance
   }
 
   // Essentially a raw age-grade type score against the reference
