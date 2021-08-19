@@ -2,6 +2,8 @@ import * as distanceService from './distance'
 import * as profileService from '../services/userProfile'
 import * as ageGrade from './ageGrade'
 
+const MAX_GRADE_RATIO = 0.5
+
 // Encapsulate a race so we can infer reasonable times and calculate
 // things like pace and age grade
 export default class Race {
@@ -63,8 +65,8 @@ export default class Race {
 
         if (this.distance != null && this.timeParts[0] === 0) {
           // First pass - assume mm:ss
-          let time = this.getTime()
-          let velocity = this.distance / time
+          const time = this.getTime()
+          const velocity = this.distance / time
 
           if (velocity > 15.0) { 
             // 15 m/s is faster than a human can run, try hh:mm instead
@@ -118,12 +120,12 @@ export default class Race {
   }
 
   getHHMMSS() {
-    let time = this.getTime()
+    const time = this.getTime()
     let hhmmss = "";
     if (time) {
-      let hours = Math.floor(time / 3600);
-      let minutes = Math.floor((time - (hours * 3600)) / 60);
-      let seconds = Math.floor(time - (hours * 3600) - (minutes * 60));
+      const hours = Math.floor(time / 3600);
+      const minutes = Math.floor((time - (hours * 3600)) / 60);
+      const seconds = Math.floor(time - (hours * 3600) - (minutes * 60));
 
       hhmmss = hours.toString().padStart(2, '0') + ':' + 
         minutes.toString().padStart(2, '0') + ':' + 
@@ -137,9 +139,9 @@ export default class Race {
     let mmss = "";
     if (this.distance && this.time) {
       //return this.toMMSS(1609 * this.time/this.distance);
-      let time = 1609 * this.time/this.distance
-      let minutes = Math.floor(time / 60);
-      let seconds = Math.floor(time - (minutes * 60));
+      const time = 1609 * this.time/this.distance
+      const minutes = Math.floor(time / 60);
+      const seconds = Math.floor(time - (minutes * 60));
 
       mmss = minutes.toString().padStart(2, '0') + ':' + 
         seconds.toString().padStart(2, '0');
@@ -171,22 +173,46 @@ export default class Race {
     // Regressions were done against D1 NCAA women's times, so the 
     // rawGradeFactor (based on male world record) needs to be adjusted down.
     // D1 10km reference time is  33:30, and male record is 26:11 (1.28:1 ratio)
-    let adjDistance = (this.distance - 790) * this.rawGradeFactor() / 1.28
-    let regInput = (this.getAvgAltitude()**1.85 * adjDistance**0.22) / 100000000
+    const adjDistance = (this.distance - 790) * this.rawGradeFactor() / 1.28
+    const regInput = (this.getAvgAltitude()**1.85 * adjDistance**0.22) / 100000000
     
     // 1st-degree (linear) regression of the 'regInput' formula
     return 1 + 0.0595*regInput
   }
 
   // Get adjustment for elevation gain and loss. 
-  // Based on Stryd formula for power: 
-  // https://blog.stryd.com/2020/01/10/how-to-calculate-your-race-time-from-your-target-power/
-  // and research by James Milledge, summarized by:
-  // Timothy Noakes, Lore of Running (4th Ed., pp. 574-580)
+  //
+  // Based on regression of Strava data represented as 2nd degree polynomial
+  // as per https://medium.com/strava-engineering/an-improved-gap-model-8b07ae8886c3
   elevationFactor() {
-    // TBD - changing formula to be energy based
-    //return 1 + (1.45 * this.elevGain - 0.797 * this.elevLoss) / this.distance
-    return 1 + (2.9 * this.elevGain - 1.6 * this.elevLoss) / this.distance
+    // Convert elevation to meters, and calculate the ratio of the two.
+    const elevGain = this.elevGain * 0.3048
+    const elevLoss = this.elevLoss * 0.3048 
+    const ratioUp = (elevGain + elevLoss) > 0 ? elevGain/(elevGain + elevLoss) : 0.5
+
+    // The ratio of elevations is used to determine what distance to allocate
+    // to the up grade and to the down grade (assumed to be consistent 
+    // grade in both directions)
+    let up = ratioUp > 0 ? elevGain / (ratioUp * this.distance) : 0.0
+    let down = ratioUp < 1 ? elevLoss / ((1 - ratioUp) * this.distance) : 0.0
+
+    // Modify so we set to reasonable max grade, keeping the ratio of 
+    // gain/loss the same
+    if (up > MAX_GRADE_RATIO || down > MAX_GRADE_RATIO) {
+      const adj = (up > down) ? MAX_GRADE_RATIO / up : MAX_GRADE_RATIO / down
+      up = adj * up
+      down = adj * down
+    }
+
+    // Convert our raw up/down ratio (rise/distance) to a grade (100% = 90 degrees)
+    const gradeUp = Math.asin(up) * 180 / Math.PI / 0.9
+    const gradeDown = -1 * Math.asin(down) * 180 / Math.PI / 0.9
+
+    // Final factor is based off of GAP model from Strava. Note that
+    // grade is negative for downhill
+    const factorUp = 1 + 0.03 * gradeUp + 1.5e-3 * gradeUp**2
+    const factorDown = 1 + 0.03 * gradeDown + 1.5e-3 * gradeDown**2
+    return factorUp * ratioUp + factorDown * (1 - ratioUp)
   }
 
   // Essentially a raw age-grade type score against the reference
@@ -229,7 +255,7 @@ export default class Race {
     if (ratio > 1.0) {
       ratio = 1 / ratio;
     }
-    let weight = ratio;  
+    const weight = ratio;  
     return [time, weight];
   }
 }
