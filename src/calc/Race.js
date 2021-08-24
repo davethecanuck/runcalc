@@ -11,16 +11,18 @@ export default class Race {
     Object.assign(this, race);
 
     /* Object must match the following:
-    this.distance     // meters
+    this.id           // unique id string
+    this.distance     // race distance meters
     this.distanceName // Name for this distance
     this.time         // int
     this.timeParts    // int[3] = hh,mm,ss
     this.hhmmss       // "hh:mm:ss" string
-    this.altitude     // int
-    this.elevGain     // int
-    this.elevLoss     // int
-    this.age          // int
-    this.id           // unique id string
+    this.altitude     // int (ft)
+    this.elevGain     // int (ft)
+    this.elevLoss     // int (ft)
+    this.age          // int (years)
+    this.adjustedTime // int - Race time adjusted to sea-level, flat, and 
+                      //       no elevation change
     */
 
     // Update the missing fields
@@ -79,6 +81,12 @@ export default class Race {
         // Fully specified hh:mm:ss
         this.time = this.getTime()
         this.hhmmss = this.getHHMMSS()
+
+        // Race time adjusted to age 25 at sea level and no 
+        // elevation gain/loss
+        this.factor = this.ageGradeFactor() * 
+          this.elevationFactor() * this.altitudeFactor()
+        this.adjustedTime = this.time / this.factor
       }
     }
   }
@@ -197,14 +205,16 @@ export default class Race {
     let down = ratioUp < 1 ? elevLoss / ((1 - ratioUp) * this.distance) : 0.0
 
     // Modify so we set to reasonable max grade, keeping the ratio of 
-    // gain/loss the same
+    // gain/loss the same. I.e. If grade is ridiculously high, we adjust
+    // down to 33.3%
     if (up > MAX_GRADE_RATIO || down > MAX_GRADE_RATIO) {
       const adj = (up > down) ? MAX_GRADE_RATIO / up : MAX_GRADE_RATIO / down
       up = adj * up
       down = adj * down
     }
 
-    // Convert our raw up/down ratio (rise/distance) to a grade (100% = 90 degrees)
+    // Convert our raw up/down ratio (rise/distance) to a grade (100% = 90 degrees).
+    // Distance is over the hypotenuse, so we need to take the asin() of the ratio
     const gradeUp = Math.asin(up) * 180 / Math.PI / 0.9
     const gradeDown = -1 * Math.asin(down) * 180 / Math.PI / 0.9
 
@@ -250,7 +260,8 @@ export default class Race {
       * this.ageGradeFactor() / race.ageGradeFactor()
 
     // Weight is ratio of race distances diminishing predictive value 
-    // as distances get further apart. TBD - Also discount older results
+    // as distances get further apart. TBD - Perhaps discount older results
+    // or ones with different elevations?
     let ratio = race.distance / this.distance;
     if (ratio > 1.0) {
       ratio = 1 / ratio;

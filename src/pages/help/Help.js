@@ -123,7 +123,7 @@ function Help(props) {
           factor (f) as a function of the distance (d) and altitude (a). 
         </p>
         <p><pre>
-          f = 1 + 0.0595&#8901;(d^1.85&#8901;(a^0.22)/10^8)
+          f = 1 + 0.0595&#8901;d^1.85&#8901;(a&#8901;0.3048)^0.22/10^8
         </pre></p>
         <p>
           This factor is multiplied by the ideal time at sea level to predict your time at 
@@ -132,170 +132,56 @@ function Help(props) {
 
         <h3> Elevation Change Factor </h3>
         <p>
-          Determining the effects of elevation gain and loss ultimately come down to 
-          calculating the power output of the runner for a given distance and time, and then
-          figuring out the fraction of this power which needs to be expended to gain 
-          elevation (uphills), and the fractional power gains from elevation loss (downhills). 
-          Easier said than done.  Power is relatively easy to measure on a 
-          bike via torque sensors in the crankshaft. It is not however easily measured 
-          on a runner. What follows are a combination of my own reasoning along
-          with what I've learned from external sources.
-          Note that power is simply energy expended over time, so you will 
-          see both terms used below as is relevant.
-        </p>
-          
-        <p>
-          Energy expended on the push-off of a stride is largely translated into
-          forward (and upwards) momentum (ignoring air resistance). There are of course 
-          internal power/energy sapping functions going on (muscle friction, 
-          respiration, etc), but I am mostly interested in the power that ends up being 
-          applied to the bottom of your foot.
-        </p>
-
-        <p>
-          For this calculator, I have used a <a 
-          href="https://blog.stryd.com/2020/01/10/how-to-calculate-your-race-time-from-your-target-power/">
-            formula provided by Stryd
-          </a>
-          , a running power meter company, to estimate the energy expenditure (e)
-          for a runner of a given mass (m) for a given distance (d). Note that Stryd 
-          presents the formula so that it predicts time as a function of
-          power and distance, but I converted the fomula to calculate energy as a 
-          function of distance. 
-          </p>
-          <p><pre>
-            e = 1.04&#8901;d&#8901;m
-          </pre> </p>
-          <p>
-          The takeaway from this is that you can generally assume a constant energy expenditure
-          for a given runner of a given mass on a given flat race regardless of pace. 
-          If you run faster, you will be expending more power over less time, but the energy 
-          spent is about the same.
-        </p>
-
-        <p>
-          It is on the landing phase where eccentric contractions of the muscles slow 
-          your descent, and kinetic energy is translated into elastic potential energy 
-          in your tendons/muscles, and also wasted as heat. The more elastic your tendons
-          are (and perhaps the better match of your cadence to the natural rebound frequency
-          of your tendons) the more kinetic energy you will recover, and the less energy 
-          will be lost to heat. Likewise, the less vertical oscillation there is in your 
-          stride, the less downward momentum will need to be halted in the landing 
-          phase, and the less energy will be lost.
-        </p>
-
-        <p>
-          When we run uphill, a larger portion of our stride is on the push-off phase, but 
-          there is less eccentric muscle contraction on landing as your front foot ends up 
-          higher than from where it took off. Thus, energy loss on the landing phase is lower
-          when running uphill than it is on the flat. Conversely, running downhill requires 
-          larger energy expenditure on landing (the foot lands below where it took off), 
-          and thus energy loss on the landing phase is higher than it is on the flat. 
-        </p>
-
-        <p>
-          Energy (e) expended to gain elevation is simple to calculate via Newtonian physics as
-          a function of your mass (m) and the elevation gain (v&#8330;). 
-        </p>
-        <p><pre>
-          e = 9.8&#8901;m&#8901;v&#8330;
-        </pre>
+          An accurate assessment of the effects of elevation change is very difficult to 
+          calculate accurately.  For instance, some people are simply better at 
+          uphills than others. For two people of equal pace on the flat, the one that 
+          is more efficient (better energy return from the landing phase) will be able 
+          to keep pace despite having lower power output. Unintuitively, the more 
+          efficient runner may be at a disadvantage on the uphills as the landing phase 
+          is truncated (your foot hits the hill while the leg is already bent) so 
+          energy return is less important. The runner with a higher power output 
+          (i.e. lower efficiency in our example) will be able to apply greater force 
+          on the push-off phase of the stride, and will be able to gain gravitational
+          potential energy faster; they will run the uphills faster. Conversely, the 
+          elongated landing phase on a downhill means there is more gravitational 
+          potential energy to be stored in your tendons (to be later returned as 
+          kinetic energy), thus putting more emphasis on efficient energy return.
+          Thus the more efficient (less powerful in our example) runner will run 
+          the downhills faster. 
         </p>
         <p>
-          Energy gained back from elevation loss (running downhill) is also based on the same equation,
-          but will be lower than the Newtonian ideal due to the imperfectly elastic collision of 
-          the landing phase. As per work done by <a 
-          href="https://www.brianmac.co.uk/articles/article147.htm">
-          British researcher, Dr. Mervyn Davies
-          </a>,
-          the energy gained on downhills is only 55% of the energy expended on uphills. This 55% 
-          number is a rule of thumb, and may be higher if you are more efficient, and lower if 
-          you are less efficient.
-        </p>
-
-        <p>
-          For this calculator, it is assumed that for a given amount of time, a runner will be 
-          able to expend energy at a certain max rate. I.e. Power expended will be constant if 
-          pacing is done evenly. You will run slower on the uphills due to power being used to 
-          lift your mass upwards, and you will run faster on downhills thanks to your gravitational
-          potential energy being converted to kinetic energy (at a 55% efficiency level, as discussed
-          above). Your sustained power potential is higher for short distances and lower for 
-          longer distances, which ultimately is why you run at a slower pace as distance 
-          (and/or time) increases.
-        </p>
-
-        <p>
-          Putting it all together, the total energy (e) you expend over a race of a given 
-          distance (d) will be broken down into the energy to move you over the distance 
-          on the flat (e&#8320;), plus the energy to gain elevation (e&#8330;) minus the energy 
-          gained back while losing elevation (e&#8331;). 
-        </p>
-        <pre>
-        <p>
-          e = e&#8320; + e&#8330; - e&#8331;
-        </p>
-        <p>
-          e = 1.04&#8901;d&#8901;m + 9.8&#8901;m&#8901;v&#8330; 
-              - 0.55&#8901;9.8&#8901;m&#8901;v&#8331;
-        </p>
-        </pre>
-        <p>
-          The total power (energy / time) will be equal to your max power for a race of 
-          equivalent time duration (t&#8320;) on the flat.  
-        </p>
-        <pre>
-          p = e&#8320;/t&#8320; = 
-            (1.04&#8901;d&#8901;m + 9.8&#8901;m&#8901;v&#8330; 
-             - 0.55&#8901;9.8&#8901;m&#8901;v&#8331;) / t
-        </pre>
-
-        <p>
-          Solving for the ratio of predicted time (t) to time on the flat (t&#8320;) 
-          gives us our elevation change factor (f).
-        </p>
-        <pre>
-          <p>
-          f = t / t&#8320; = 1 + (4.71&#8901;v&#8330; - 2.59&#8901;v&#8331;) / d 
-          </p>
-        </pre>
-
-        <h3> Power and Efficiency </h3>
-        <p>
-          The ability of an individual runner to recover energy from the landing phase and
-          translate it to forward momentum is really the definition of the efficiency of the
-          runner. A perfectly elastic landing (you bounce like a golf ball) would translate 
-          100% of the power stored in your tendons to kinetic energy. A perfectly inelastic 
-          landing (i.e. you stick to the ground like a lump of soft clay) would translate 
-          0% of your gravitational potential energy to forward momentum. Though a typical 
-          human has an efficiency of 55%, some people may be closer to 60% efficient and 
-          some more like 50% efficient (though I have no idea what the actual typical range is).
+          As per research by Strava for their <a 
+          href="https://medium.com/strava-engineering/an-improved-gap-model-8b07ae8886c3"> 
+          Grade Adjusted Pace model (GAP) 
+          </a> the effects of grade on pace are non-linear, tracing a parabolic 
+          function. Downhills help to about a 10% grade after which they become 
+          counter-productive, and at about 20% downhill grade your pace will 
+          likely match your pace on the flat. However, from about a -5% grade up to a 
+          +35% grade (which is as far as the Strava data takes us) the effect of 
+          grade on pace is fairly linear. Because of this, we are able to make 
+          assumptions about grade based solely on elevation gain/loss and the race
+          distance and do not need the minute details of every little up and down 
+          on the race course.  For purposes of this calculator, we assume the grade 
+          up and down are the same. So for example, if there is 900m elevation gain 
+          and 100m elevation loss over a 10,000m race, we assume the elevation gain 
+          is happening over 9,000m of the race (+10% grade) and the elevation loss 
+          is happening over 1,000m of the race (-10% grade).
         </p>
         <p> 
-          Two equal size and pace runners may each have a different efficiency level for
-          translating the landing phase to kinetic energy. This means that the less efficient
-          runner has to expend more energy (and thus have a higher power potentitial) than 
-          the more efficient runner.  Each individual can thus be thought of as more of 
-          a 'power' runner or as an 'efficiency' runner. 
+          Once we have converted the elevation gain and loss each to a grade (g),
+          we feed each into the GAP model to get a factor for the elevation 
+          gain and a factor for the elevation loss:
         </p>
-
+        <p><pre>
+          f = 1 + 0.03&#8901;g + 1.5e-3&#8901;g&#178;
+        </pre></p>
         <p>
-          What this means is that the 'efficiency' runner will have less energy 
-          loss on the downhills than the 'power' runner. The 'power' runner 
-          will suffer less of an efficiency disadvantage on the uphills as there is 
-          less potential energy to lose. Thus in our example of the equal (flat) 
-          paced efficiency and power runner, the power runner will be faster on 
-          the uphills and the efficiency runner will be faster on the downhills.
-          On a hilly course with equal elevation gain and loss, the power runner has the
-          advantage over our efficiency runner (due to the 55% rule).
+          The factor for the elevation gain side is applied to the portion of the 
+          race that is uphill, and the factor for the elevation loss side is applied
+          to the portion of the race that is downhill. The net effect is such that 
+          a course with equal uphill and downhill will always have an elevation 
+          factor > 1 and thus it will be a slower course than a flat one. 
         </p>
-
-        <p>
-          The calculator doesn't currently calculate whether you are a power or 
-          efficiency runner (i.e. Are you below or above 55% landing efficiency)
-          but this may be added at a later date. An 'efficiency factor' could be 
-          helpful in predicting times for hilly courses.
-        </p>
-
         <h3> Age Factor </h3>
         <p>
           The 2015 <a 
