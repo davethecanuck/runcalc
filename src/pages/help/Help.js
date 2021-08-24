@@ -182,6 +182,16 @@ function Help(props) {
           a course with equal uphill and downhill will always have an elevation 
           factor > 1 and thus it will be a slower course than a flat one. 
         </p>
+        <p>
+          Note that the elevation changes entered into the Prediction scenarios 
+          obviously result in vastly different grades for different distances. 
+          For example, if you enter an elevation gain of 1000ft (~300m) this is 
+          a relatively small grade for a marathon (~0.75%) and a very large 
+          grade for an 800m race (&gt;35%). If the elevation gain was set to 
+          3300ft (~1000m), then the elevation gain would be greater than the 
+          length of the shorter races; an absurd value. To combat this, the 
+          calculations for grade are adjusted so that they are &lt;35% up or down.
+        </p>
         <h3> Age Factor </h3>
         <p>
           The 2015 <a 
