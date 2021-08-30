@@ -4,12 +4,13 @@ import {MALE_DATA} from './maleAgeGrade'
 // Minimum age in age grade tables
 const MIN_AGE = 5;
 
+// Invert factors to the >1.0 semantic used in the calculator
 export function getFemaleAgeGradeFactor(age, meters) {
-    return getAgeGradeFactor(FEMALE_DATA, age, meters)
+    return 1.0 / getAgeGradeFactor(FEMALE_DATA, age, meters)
 }
 
 export function getMaleAgeGradeFactor(age, meters) {
-    return getAgeGradeFactor(MALE_DATA, age, meters)
+    return 1.0 / getAgeGradeFactor(MALE_DATA, age, meters)
 }
 
 // Given an age and distance, get the grading factor. Interpolate from raw
@@ -28,14 +29,11 @@ function getAgeGradeFactor(data, age, meters) {
         if (currDist >= distance) {
             if (i > 0) {
                 // Interpolate
+                const range = currDist - data.distance[i-1]
                 return (
-                    factor[i] 
-                        * (currDist - distance) 
-                        / (currDist - data.distance[i-1])
+                    factor[i-1] * (currDist - distance) / range
                     +
-                    factor[i-1] 
-                        * (distance - data.distance[i-1]) 
-                        / (currDist - data.distance[i-1])
+                    factor[i] * (distance - data.distance[i-1]) / range
                 )
             }
             else {

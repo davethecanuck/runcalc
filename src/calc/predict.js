@@ -6,36 +6,29 @@ import Race from './Race'
 export function getRacePredictions(scenario) {
   // Iterate by target race
   let targetRaces = []
+  const history = historyService.getPastRaces()
 
   distanceCalc.getDistances().forEach(target => {
     // Iterate past races
     let totalTime = 0.0
     let totalWeight = 0.0
 
-    historyService.getPastRaces().forEach(pastRace => {
-      const [time, weight] = pastRace.predictTime(
-        new Race({
-          distance: target.distance, 
-          age: scenario.age,
-          altitude: scenario.altitude,
-          elevGain: scenario.elevGain,
-          elevLoss: scenario.elevLoss,
-        })
-      )
+    let targetRace = new Race({
+      distance: target.distance, 
+      age: scenario.age,
+      altitude: scenario.altitude,
+      elevGain: scenario.elevGain,
+      elevLoss: scenario.elevLoss,
+    })
+
+    history.forEach(pastRace => {
+      const [time, weight] = pastRace.predictTime(targetRace)
       totalTime += time * weight
       totalWeight += weight
     })
 
     if (totalWeight > 0.0) {
-      // Create new predicted/target race for the scenario 
-      let targetRace = new Race({
-        time: totalTime/totalWeight,
-        distance: target.distance,
-        altitude: scenario.altitude,
-        elevGain: scenario.elevGain,
-        elevLoss: scenario.elevLoss,
-        age: scenario.age,
-      })
+      targetRace.setTime(totalTime/totalWeight)
       targetRaces.push(targetRace)
     }
   })

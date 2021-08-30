@@ -180,7 +180,7 @@ function Help(props) {
           race that is uphill, and the factor for the elevation loss side is applied
           to the portion of the race that is downhill. The net effect is such that 
           a course with equal uphill and downhill will always have an elevation 
-          factor > 1 and thus it will be a slower course than a flat one. 
+          factor &gt; 1 and thus it will be a slower course than a flat one. 
         </p>
         <p>
           Note that the elevation changes entered into the Prediction scenarios 

@@ -21,6 +21,9 @@ export default class Race {
     this.elevGain     // int (ft)
     this.elevLoss     // int (ft)
     this.age          // int (years)
+    this.raceGrade    // double - raw grade of this race against the bestTime
+                      // e.g. raceGrade=1.5 means 50% slower than equivalent world best
+    this.adjustFactor // double - All in adjustment factor for this race 
     this.adjustedTime // int - Race time adjusted to sea-level, flat, and 
                       //       no elevation change
     */
@@ -44,9 +47,10 @@ export default class Race {
       this.elevLoss = 0
     }
 
-    const profile = profileService.getProfile()
     if (!this.age) {
+      const profile = profileService.getProfile()
       this.age = new Date().getFullYear() - profile.birthYear
+
       if (this.age < 1) {
         this.age = 25
       }
@@ -84,9 +88,11 @@ export default class Race {
 
         // Race time adjusted to age 25 at sea level and no 
         // elevation gain/loss
-        this.factor = this.ageGradeFactor() * 
-          this.elevationFactor() * this.altitudeFactor()
-        this.adjustedTime = this.time / this.factor
+        this.adjustFactor = this.elevationFactor() * this.altitudeFactor() 
+          * this.ageGradeFactor()
+
+        this.adjustedTime = this.time / this.adjustFactor
+        this.raceGrade = this.adjustedTime / this.bestTime()
       }
     }
   }
@@ -95,6 +101,13 @@ export default class Race {
   // plus average of elevation gain and loss)
   getAvgAltitude() {
     return Math.max(0, this.altitude + (this.elevGain - this.elevLoss) / 2.0)
+  }
+
+  // Sets the time field, forcing recalculation of the related fields
+  setTime(newTime) {
+    this.time = newTime
+    this.timeParts = null
+    this.recalcFields()
   }
 
   // Return time from object or timeParts 
@@ -254,10 +267,8 @@ export default class Race {
   predictTime(race) {
     // Set race time to expected value at sea level so we can calculate the 
     // altitude adjustment for that race
-    race.time = race.bestTime() * this.rawGradeFactor() / 
-      this.altitudeFactor() / this.elevationFactor()
-    const time = race.time * race.altitudeFactor() * race.elevationFactor()
-      * this.ageGradeFactor() / race.ageGradeFactor()
+    race.setTime(race.bestTime() * this.raceGrade)
+    const time = race.time * race.adjustFactor
 
     // Weight is ratio of race distances diminishing predictive value 
     // as distances get further apart. TBD - Perhaps discount older results
