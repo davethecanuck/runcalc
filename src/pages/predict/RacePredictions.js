@@ -18,6 +18,7 @@ function RacePredictions(props) {
     {id:'distance', label:'Distance', disableSort:true},
     {id:'time', label:'Time', disableSort:true},
     {id:'pace', label:'Pace', disableSort:true},
+    {id:'ageGrade', label:'Age Grade', disableSort:true},
   ]
 
   const {
@@ -86,6 +87,7 @@ function RacePredictions(props) {
                       <TableCell> {item.distanceName} </TableCell>
                       <TableCell> {item.hhmmss} </TableCell>
                       <TableCell> {item.getPaceString()} </TableCell>
+                      <TableCell> {item.getAgeGradeString()} </TableCell>
                     </TableRow>
                   )
                 )

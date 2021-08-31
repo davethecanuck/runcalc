@@ -21,8 +21,8 @@ export default class Race {
     this.elevGain     // int (ft)
     this.elevLoss     // int (ft)
     this.age          // int (years)
-    this.raceGrade    // double - raw grade of this race against the bestTime
-                      // e.g. raceGrade=1.5 means 50% slower than equivalent world best
+    this.ageGrade // double - raw grade of this race against the bestTime
+                      // e.g. 0.5 means 50% slower than equivalent world best
     this.adjustFactor // double - All in adjustment factor for this race 
     this.adjustedTime // int - Race time adjusted to sea-level, flat, and 
                       //       no elevation change
@@ -92,7 +92,7 @@ export default class Race {
           * this.ageGradeFactor()
 
         this.adjustedTime = this.time / this.adjustFactor
-        this.raceGrade = this.adjustedTime / this.bestTime()
+        this.ageGrade = this.bestTime() / this.adjustedTime
       }
     }
   }
@@ -132,7 +132,7 @@ export default class Race {
       return [
         Math.floor(this.time/3600),
         Math.floor((this.time % 3600)/60),
-        Math.floor(this.time % 60),
+        Math.round(this.time % 60),
       ]
     }
     else {
@@ -146,7 +146,7 @@ export default class Race {
     if (time) {
       const hours = Math.floor(time / 3600);
       const minutes = Math.floor((time - (hours * 3600)) / 60);
-      const seconds = Math.floor(time - (hours * 3600) - (minutes * 60));
+      const seconds = Math.round(time - (hours * 3600) - (minutes * 60));
 
       hhmmss = hours.toString().padStart(2, '0') + ':' + 
         minutes.toString().padStart(2, '0') + ':' + 
@@ -162,12 +162,21 @@ export default class Race {
       //return this.toMMSS(1609 * this.time/this.distance);
       const time = 1609 * this.time/this.distance
       const minutes = Math.floor(time / 60);
-      const seconds = Math.floor(time - (minutes * 60));
+      const seconds = Math.round(time - (minutes * 60));
 
       mmss = minutes.toString().padStart(2, '0') + ':' + 
         seconds.toString().padStart(2, '0');
     }
     return mmss;
+  }
+
+  // Return the Age Grade as a percentage
+  getAgeGradeString() {
+    let ag = ""
+    if (this.ageGrade) {
+      ag = (100.0 * this.ageGrade).toFixed(1)
+    }
+    return ag
   }
 
   // Based on polynomial regression of men's and women's world record times.
@@ -267,7 +276,7 @@ export default class Race {
   predictTime(race) {
     // Set race time to expected value at sea level so we can calculate the 
     // altitude adjustment for that race
-    race.setTime(race.bestTime() * this.raceGrade)
+    race.setTime(race.bestTime() / this.ageGrade)
     const time = race.time * race.adjustFactor
 
     // Weight is ratio of race distances diminishing predictive value 

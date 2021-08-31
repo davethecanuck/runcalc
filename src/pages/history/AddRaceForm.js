@@ -8,7 +8,6 @@ import Race from '../../calc/Race'
 
 // Parsing and validation for the form fields. Regex should match blank
 // if value is optional. 
-const profile = profileService.getProfile()
 const FIELD = {
   'id': {
     pattern: RegExp(/(.*)/),
@@ -43,7 +42,7 @@ const FIELD = {
   'age': {
     pattern: RegExp(/^\s*([1-9]\d{0,1})\s*$/),
     help: 'Age on race day',
-    initVal: new Date().getFullYear() - profile.birthYear,
+    initVal: 25,  // Default is updated based on profile
   }
 }
 
@@ -55,6 +54,10 @@ Object.keys(FIELD).forEach((key) => {
 
 function AddRaceForm(props) {
   const { addOrEdit, recordForEdit, isDesktop } = props;
+
+  // Update initialFValues for age in case the profile was updated 
+  const profile = profileService.getProfile()
+  initialFValues['age'] = new Date().getFullYear() - profile.birthYear
 
   // Validate is called on each key stroke for the current field 
   // being edited. For onSubmit, ALL of the fields are included
