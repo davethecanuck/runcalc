@@ -3,6 +3,7 @@ import * as profileService from '../services/userProfile'
 import * as ageGrade from './ageGrade'
 
 const MAX_GRADE_RATIO = 0.5
+const DEFAULT_AGE = 25
 
 // Encapsulate a race so we can infer reasonable times and calculate
 // things like pace and age grade
@@ -21,11 +22,11 @@ export default class Race {
     this.elevGain     // int (ft)
     this.elevLoss     // int (ft)
     this.age          // int (years)
-    this.ageGrade // double - raw grade of this race against the bestTime
+    this.raceGrade    // double - raw grade of this race against the male best time
                       // e.g. 0.5 means 50% slower than equivalent world best
     this.adjustFactor // double - All in adjustment factor for this race 
-    this.adjustedTime // int - Race time adjusted to sea-level, flat, and 
-                      //       no elevation change
+    this.flatLevelTime // int - Race time adjusted to sea-level, flat, and 
+                      //       no elevation change (for actual age)
     */
 
     // Update the missing fields
@@ -52,7 +53,7 @@ export default class Race {
       this.age = new Date().getFullYear() - profile.birthYear
 
       if (this.age < 1) {
-        this.age = 25
+        this.age = DEFAULT_AGE
       }
     }
 
@@ -86,13 +87,18 @@ export default class Race {
         this.time = this.getTime()
         this.hhmmss = this.getHHMMSS()
 
-        // Race time adjusted to age 25 at sea level and no 
-        // elevation gain/loss
-        this.adjustFactor = this.elevationFactor() * this.altitudeFactor() 
-          * this.ageGradeFactor()
+        const elevationFactor = this.elevationFactor()
+        const altitudeFactor = this.altitudeFactor()
+        const ageGradeFactor = this.ageGradeFactor()
 
-        this.adjustedTime = this.time / this.adjustFactor
-        this.ageGrade = this.bestTime() / this.adjustedTime
+        // Adjusted to flat and sea level for the actual age
+        this.flatLevelTime = this.time / (elevationFactor * altitudeFactor)
+
+        // All in adjustment factor for this race
+        this.adjustFactor = elevationFactor * altitudeFactor * ageGradeFactor
+
+        // All in grade for this race
+        this.raceGrade = this.bestTime() * this.adjustFactor / this.time 
       }
     }
   }
@@ -172,11 +178,29 @@ export default class Race {
 
   // Return the Age Grade as a percentage
   getAgeGradeString() {
-    let ag = ""
-    if (this.ageGrade) {
-      ag = (100.0 * this.ageGrade).toFixed(1)
+    let agString = ""
+
+    if (this.raceGrade) {
+      let ag = 1.0
+      const profile = profileService.getProfile()
+
+      // The raceGrade is essentially the male age grade
+      if (profile.gender === 'male') {
+        ag = ageGrade.getMaleAgeGrade(this.flatLevelTime, this.age, this.distance)
+      }
+      else if (profile.gender === 'female') {
+        ag = ageGrade.getFemaleAgeGrade(this.flatLevelTime, this.age, this.distance)
+      }
+      else {
+        ag = (
+          ageGrade.getMaleAgeGrade(this.flatLevelTime, this.age, this.distance)
+          + 
+          ageGrade.getFemaleAgeGrade(this.flatLevelTime, this.age, this.distance)
+        ) / 2.0
+      }
+      agString = (100.0 * ag).toFixed(1)
     }
-    return ag
+    return agString
   }
 
   // Based on polynomial regression of men's and women's world record times.
@@ -276,7 +300,7 @@ export default class Race {
   predictTime(race) {
     // Set race time to expected value at sea level so we can calculate the 
     // altitude adjustment for that race
-    race.setTime(race.bestTime() / this.ageGrade)
+    race.setTime(race.bestTime() / this.raceGrade)
     const time = race.time * race.adjustFactor
 
     // Weight is ratio of race distances diminishing predictive value 
