@@ -4,6 +4,15 @@ import {MALE_DATA} from './maleAgeGrade'
 // Minimum age in age grade tables
 const MIN_AGE = 5;
 
+/*
+NOTE TBD - pre-can standards and factors for our set distances
+- change distances array to be meters not km so no floating point errors
+- use standards for bestTime calculations
+- create maps to set way to convert one distance to another 
+  as ratio of standards
+- reformat as maps in this file for more efficient lookup and no interpolation
+*/
+
 // Invert factors to the >1.0 semantic used in the calculator
 export function getFemaleAgeGradeFactor(age, meters) {
   return 1.0 / getAgeGradeFactor(FEMALE_DATA, age, meters)

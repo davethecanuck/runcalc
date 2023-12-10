@@ -2,7 +2,7 @@ import * as distanceService from './distance'
 import * as profileService from '../services/userProfile'
 import * as ageGrade from './ageGrade'
 
-const MAX_GRADE_RATIO = 0.5
+const MAX_GRADE = 35
 const DEFAULT_AGE = 25
 
 // Encapsulate a race so we can infer reasonable times and calculate
@@ -238,37 +238,32 @@ export default class Race {
   //
   // Based on regression of Strava data represented as 2nd degree polynomial
   // as per https://medium.com/strava-engineering/an-improved-gap-model-8b07ae8886c3
+  //
+  // We model the elevation changes such that the average grade up and 
+  // down are the same. Grade is rise over run (horizontal birds-eye distance)
   elevationFactor() {
-    // Convert elevation to meters, and calculate the ratio of the two.
-    const elevGain = this.elevGain * 0.3048
-    const elevLoss = this.elevLoss * 0.3048 
-    const ratioUp = (elevGain + elevLoss) > 0 ? elevGain/(elevGain + elevLoss) : 0.5
+    // Note that the values are supposed to be positive  both up and down.
+    const riseUp = Math.abs(this.elevGain * 0.3048)
+    const riseDown = Math.abs(this.elevLoss * 0.3048)
+    const riseTotal = riseUp + riseDown
+    const runTotal = Math.sqrt(this.distance**2 - riseTotal**2)
+    
+    // Grade% is 100 * rise/run, but we cap at 35% (MAX_GRADE)
+    const gradeUp = Math.min(100 * riseTotal / runTotal, MAX_GRADE)
+    const gradeDown = -1 * gradeUp
 
-    // The ratio of elevations is used to determine what distance to allocate
-    // to the up grade and to the down grade (assumed to be consistent 
-    // grade in both directions)
-    let up = ratioUp > 0 ? elevGain / (ratioUp * this.distance) : 0.0
-    let down = ratioUp < 1 ? elevLoss / ((1 - ratioUp) * this.distance) : 0.0
-
-    // Modify so we set to reasonable max grade, keeping the ratio of 
-    // gain/loss the same. I.e. If grade is ridiculously high, we adjust
-    // down to 33.3%
-    if (up > MAX_GRADE_RATIO || down > MAX_GRADE_RATIO) {
-      const adj = (up > down) ? MAX_GRADE_RATIO / up : MAX_GRADE_RATIO / down
-      up = adj * up
-      down = adj * down
-    }
-
-    // Convert our raw up/down ratio (rise/distance) to a grade (100% = 90 degrees).
-    // Distance is over the hypotenuse, so we need to take the asin() of the ratio
-    const gradeUp = Math.asin(up) * 180 / Math.PI / 0.9
-    const gradeDown = -1 * Math.asin(down) * 180 / Math.PI / 0.9
+    // Calculate the portion of the distance where we apply the up grade
+    // and down grade. If no elevation up or down, we split race evenly
+    // and the factor will end up as 1.0
+    const ratioUp = (riseUp + riseDown > 0) ? riseUp/(riseUp + riseDown) : 0.5
+    const distUp = this.distance * ratioUp
+    const distDown = this.distance - distUp
 
     // Final factor is based off of GAP model from Strava. Note that
     // grade is negative for downhill
     const factorUp = 1 + 0.03 * gradeUp + 1.5e-3 * gradeUp**2
     const factorDown = 1 + 0.03 * gradeDown + 1.5e-3 * gradeDown**2
-    return factorUp * ratioUp + factorDown * (1 - ratioUp)
+    return (factorUp * distUp + factorDown * distDown) / this.distance
   }
 
   // Essentially a raw age-grade type score against the reference

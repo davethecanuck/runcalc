@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
     // Inspect tells us the class for the form control.
     // The & refers to the parent (root)
     '& .MuiFormControl-root': {
-      width: '80%',
+      width: '90%',
       margin: theme.spacing(1),
     }
   }

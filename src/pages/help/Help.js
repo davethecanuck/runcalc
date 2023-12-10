@@ -82,7 +82,7 @@ function Help(props) {
 
         <h3> Altitude Factor </h3>
         <p>
-          A similar regression was done for altitude adjustements based on raw
+          A similar regression was done for altitude adjustments based on raw
           data from the <a 
             href='https://www.ustfccca.org/assets/ncaa-info/2009-outdoor-alt-adjust.pdf'
             target='_blank' rel='noopener noreferrer'> 
@@ -110,7 +110,7 @@ function Help(props) {
         <p>
           Another observation of the NCAA tables is that they used the same adjustment factor
           for a given distance whether you are a D1 male runner (~28min 10km time) or a 
-          D3 female runner (~33 min 10km time). As discussed above, the adjustement really 
+          D3 female runner (~33 min 10km time). As discussed above, the adjustment really 
           ought to be higher for slower runners, but NCAA took a shortcut by applying the 
           same factor across all divisions.
         </p>  
@@ -210,6 +210,15 @@ function Help(props) {
           regress the data to a formula (unlike what was done for the distance conversion 
           formula).
         </p>
+        <p>
+          Note that the "Predict" section provides an Age Grade (%) which may surprisingly
+          vary from one distance to another, even if you have only entered one race into
+          your history. The reason for this is that there is a bit of a misalignment 
+          between the world records for each distance and the age records for each 
+          distance. I.e. Some records for certains distances and ages may be stronger
+          or weaker than those for other distances or ages. This variance is insignificant 
+          however given the host of other uncertainties in the apps predictions.
+        </p>
 
         <h3> Combining Multiple Past Races </h3>
         <p>
@@ -219,6 +228,10 @@ function Help(props) {
           higher. For example, your half marathon time will be weighted higher than 
           your 800m time for predicting your marathon time, but the 800m time will be weighted
           higher when predicting your 1500m time. 
+        </p>
+        <p> 
+          The Age Grade column in the "Predict" section can give you an idea as to which 
+          are your stronger distances as these will have a higher Age Grade value.
         </p>
         <p>
           Potential future development may weigh more recent races more than older races, 

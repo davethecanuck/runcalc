@@ -25,7 +25,7 @@ const FIELD = {
     items: [
       { 'id': 'male', 'title': 'Male'},
       { 'id': 'female', 'title': 'Female'},
-      { 'id': 'other', 'title': 'Other'} 
+      { 'id': 'other', 'title': 'Non-Binary'} 
     ],
   }
 }
