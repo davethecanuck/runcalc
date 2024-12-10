@@ -1,11 +1,20 @@
 // 800m is the minimum distance where the model barely works, 
-// and 1500m is probably closer to reality for predictiveness
+// and 1500m is probably closer to reality for predictiveness.
+// Because of this, we could fudge factors to the distances to 
+// correct for the model inconsistency. But this causes complications
+// with converting between distances and paces
 const DISTANCES = [
+  //{ name: "800m", distance: 795 },
   { name: "800m", distance: 800 },
+  //{ name: "1km", distance: 995 },
   { name: "1km", distance: 1000 },
+  //{ name: "1500m", distance: 1495 },
   { name: "1500m", distance: 1500 },
+  //{ name: "1600m", distance: 1591 },
   { name: "1600m", distance: 1600 },
+  //{ name: "1 mile", distance: 1600 },
   { name: "1 mile", distance: 1609 },
+  //{ name: "3000m", distance: 2980 },
   { name: "3000m", distance: 3000 },
   { name: "2 mile", distance: 3219 },
   { name: "5km", distance: 5000 },

@@ -165,10 +165,9 @@ export default class Race {
   getPaceString() {
     let mmss = "";
     if (this.distance && this.time) {
-      //return this.toMMSS(1609 * this.time/this.distance);
-      const time = 1609 * this.time/this.distance
-      const minutes = Math.floor(time / 60);
-      const seconds = Math.round(time - (minutes * 60));
+      const time = Math.round(1609 * this.time/this.distance)
+      const seconds = time % 60
+      const minutes = Math.round((time - seconds) / 60)
 
       mmss = minutes.toString().padStart(2, '0') + ':' + 
         seconds.toString().padStart(2, '0');
@@ -224,14 +223,16 @@ export default class Race {
   // as this was found through regression to be a good adjustment, largely
   // based on the 800m being largely anaerobic (altitude adjustment is small).
   altitudeFactor() {
-    // Regressions were done against D1 NCAA women's times, so the 
+    // Regressions were done against D3 NCAA men's times, so the 
     // rawGradeFactor (based on male world record) needs to be adjusted down.
-    // D1 10km reference time is  33:30, and male record is 26:11 (1.28:1 ratio)
-    const adjDistance = (this.distance - 790) * this.rawGradeFactor() / 1.28
+    // D1 10km reference time is 30:20, and male record is 26:11 (1.16:1 ratio)
+    const adjDistance = (this.distance - 790) * this.rawGradeFactor() / 1.16
     const regInput = (this.getAvgAltitude()**1.85 * adjDistance**0.22) / 100000000
     
     // 1st-degree (linear) regression of the 'regInput' formula
-    return 1 + 0.0595*regInput
+    //return 1 + 0.0674*regInput
+    // EYE - fudging to get better predictions to match age grade table
+    return 1 + 0.058*regInput
   }
 
   // Get adjustment for elevation gain and loss. 
