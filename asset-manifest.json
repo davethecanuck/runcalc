@@ -1,4 +1,10 @@
 {
-  "main.js": "static/js/main.25bcec52.js",
-  "main.js.map": "static/js/main.25bcec52.js.map"
+  "files": {
+    "main.js": "/runcalc/static/js/main.1aa4bd14.js",
+    "index.html": "/runcalc/index.html",
+    "main.1aa4bd14.js.map": "/runcalc/static/js/main.1aa4bd14.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.1aa4bd14.js"
+  ]
 }
